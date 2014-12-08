@@ -4,9 +4,6 @@ module CMA
   module CC
     module CaseList
       class Page
-        class Link < Struct.new(:href, :title)
-        end
-
         attr_accessor :doc
         def initialize(doc)
           self.doc = doc
