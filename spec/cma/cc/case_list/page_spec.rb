@@ -38,7 +38,7 @@ module CMA::CC::CaseList
           subject(:link) { page.letter_page_links.first }
 
           it 'has a letter for a title' do
-            link.title.should == 'B'
+            expect(link.title).to eql('B')
           end
 
           it 'links to the B page' do
