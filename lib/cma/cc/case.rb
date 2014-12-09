@@ -11,6 +11,15 @@ module CMA
         'closed'
       end
 
+      def case_type
+        case title
+        when /merger inquir(y|ies)/ then 'mergers'
+        when /market investigation/ then 'markets'
+        else
+          'unknown'
+        end
+      end
+
       def self.from_link(link)
         Case.new(link.original_url, link.title)
       end

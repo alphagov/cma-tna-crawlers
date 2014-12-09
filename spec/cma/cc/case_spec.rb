@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'cma/cc/case'
+require 'nokogiri'
 
 module CMA::CC
   describe Case do
@@ -20,6 +21,10 @@ module CMA::CC
         expect(_case.title).to eql(title)
       end
 
+      it 'cannot work out the case_type from this title' do
+        expect(_case.case_type).to eql('unknown')
+      end
+
       it 'is hardwired to closed' do
         expect(_case.case_state).to eql('closed')
       end
@@ -32,6 +37,24 @@ module CMA::CC
         it 'uses the original_url from the link' do
           expect(_case.original_url).to eql(original_url)
         end
+      end
+
+      context 'case_type is a mergers inquiry' do
+        let(:title) { 'Alpha Flight Group Limited / LSG Lufthansa Service Holding AG merger inquiry' }
+
+        example { expect(_case.case_type).to eql('mergers') }
+      end
+
+      context 'case_type is a mergers inquiry' do
+        let(:title) { 'Greater Western Passenger Rail Franchise merger inquiries' }
+
+        example { expect(_case.case_type).to eql('mergers') }
+      end
+
+      context 'case_type is a markets investigation' do
+        let(:title) { 'Classified Directory Advertising Services market investigation' }
+
+        example { expect(_case.case_type).to eql('markets') }
       end
     end
 
