@@ -75,7 +75,7 @@ module CMA::CC
     describe 'Adding more detail' do
       let(:doc) { Nokogiri::HTML(File.read('spec/fixtures/cc/archived-arcelor-case.html')) }
 
-      subject(:_case) { Case.new(original_url, title) }
+      subject(:_case) { Case.create(original_url, title) }
 
       describe '#add_case_detail' do
         before { _case.add_case_detail(doc) }

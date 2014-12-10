@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'cma/case_store'
+require 'cma/cc/case'
 
 module CMA
   describe CaseStore do
@@ -70,6 +71,32 @@ module CMA
           end
         end
 
+      end
+    end
+
+    describe '`.find`ing a case we just saved by URL' do
+      let(:case_store) { CaseStore.new('spec/fixtures/store') }
+
+      let(:title) { 'test_title' }
+      let(:original_url) do
+        'http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/arcelor-sa-corus-uk-limited'
+      end
+
+      let!(:case_to_save) do
+        CC::Case.create(original_url, title)
+      end
+
+      before { case_store.save(case_to_save) }
+
+      subject(:_case) { case_store.find(original_url) }
+
+      it 'hydrates the right class' do
+        expect(_case).to be_a(CC::Case)
+      end
+
+      describe 'the case' do
+        example { expect(_case.title).to eql(title) }
+        example { expect(_case.original_url).to eql(original_url) }
       end
     end
   end

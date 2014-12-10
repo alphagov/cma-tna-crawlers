@@ -9,10 +9,6 @@ module CMA
       include ActiveModel::Serializers::JSON
 
       attr_accessor :original_url, :title, :date_of_referral, :statutory_deadline
-      def initialize(original_url, title)
-        self.original_url  = original_url
-        self.title = title
-      end
 
       def case_state
         'closed'
@@ -28,7 +24,7 @@ module CMA
       end
 
       def self.from_link(link)
-        Case.new(link.original_url, link.title)
+        Case.create(link.original_url, link.title)
       end
 
       def add_case_detail(doc)
@@ -40,6 +36,13 @@ module CMA
 
       def attributes
         instance_values
+      end
+
+      def attributes=(hash)
+        hash.each_pair do |k, v|
+          setter = "#{k}="
+          self.send(setter, v) if respond_to?(setter)
+        end
       end
 
       def serializable_hash(options={})
@@ -102,6 +105,13 @@ module CMA
               markup.inner_html.to_s,
               input: 'html'
             ).to_kramdown.gsub(/\{:.+?}/m, '')
+        end
+      end
+
+      def self.create(original_url, title)
+        Case.new.tap do |c|
+          c.original_url  = original_url
+          c.title = title
         end
       end
 

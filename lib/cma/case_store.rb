@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'json'
 require 'cma/filename'
+require 'cma/cc/case'
 
 module CMA
   class CaseStore
@@ -27,7 +28,19 @@ module CMA
       )
     end
 
-  private
+    def find(original_url)
+      class_to_load.new.from_json File.read(full_filename(original_url))
+    end
+
+    private
+    def class_to_load
+      CC::Case
+    end
+
+    def full_filename(original_url)
+      File.join(location, Filename.for(original_url))
+    end
+
     ##
     # To get pretty generation, we need a hash.
     # The quick-and-dirty method is to serialize, then reparse the case.
