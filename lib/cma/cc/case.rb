@@ -1,6 +1,10 @@
+require 'active_model'
+
 module CMA
   module CC
     class Case
+      include ActiveModel::Serializers::JSON
+
       attr_accessor :original_url, :title, :date_of_referral, :statutory_deadline
       def initialize(original_url, title)
         self.original_url  = original_url
@@ -31,6 +35,9 @@ module CMA
           doc, [possible_date_position_1(3), possible_date_position_2(3)])
       end
 
+      def attributes
+        instance_values
+      end
     private
       # Dates could be here
       def possible_date_position_1(index)

@@ -25,7 +25,7 @@ module CMA
 
       context 'when the object to save is not serializable to JSON' do
         it 'fails but leaves the dir' do
-          expect { case_store.save(Object.new, 'filename.json') }.
+          expect { case_store.save(1, 'filename.json') }.
             to raise_error(ArgumentError, /Case must be serializable to JSON/)
           expect(Dir).to exist(case_store.location)
         end

@@ -37,6 +37,18 @@ module CMA::CC
         it 'uses the original_url from the link' do
           expect(_case.original_url).to eql(original_url)
         end
+
+        describe 'serialization' do
+          it 'serializes to JSON' do
+            expect(JSON.parse(_case.to_json)).to eql(
+               {
+                 'original_url' => 'http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/'\
+                                   'alpha-flight-group-limited-lsg-lufthansa-service-holding-ag-merger-inquiry',
+                 'title' => 'A title'
+               }
+             )
+          end
+        end
       end
 
       context 'case_type is a mergers inquiry' do
