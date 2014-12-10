@@ -23,6 +23,10 @@ module CMA
         end
       end
 
+      def original_urls
+        @original_urls ||= Set.new([original_url])
+      end
+
       def self.from_link(link)
         Case.create(link.original_url, link.title)
       end

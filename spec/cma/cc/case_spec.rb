@@ -38,7 +38,27 @@ module CMA::CC
           expect(_case.original_url).to eql(original_url)
         end
 
-        describe 'serialization' do
+        describe '#original_urls' do
+          it 'starts with only the original' do
+            expect(_case.original_urls).to match_array([original_url])
+          end
+
+          it 'can have more original_urls added to it as a Set' do
+            _case.original_urls << 'http://example.com/1'
+            _case.original_urls << 'http://example.com/1'
+
+            expect(_case.original_urls).to match_array([original_url, 'http://example.com/1'])
+          end
+
+        end
+
+        describe '#to_json' do
+          before do
+            subpage_doc = Nokogiri::HTML(File.read('spec/fixtures/cc/archived-arcelor-final-report.html'))
+            _case.markup_sections['provisional_final_report'] = '# Header'
+            _case.original_urls << 'http://example.com/1'
+          end
+
           it 'serializes to JSON' do
             expect(JSON.parse(_case.to_json)).to eql(
                {
@@ -46,7 +66,15 @@ module CMA::CC
                                    'alpha-flight-group-limited-lsg-lufthansa-service-holding-ag-merger-inquiry',
                  'title' => 'A title',
                  'case_state' => 'closed',
-                 'case_type' => 'unknown'
+                 'case_type' => 'unknown',
+                 'original_urls' => [
+                   'http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/'\
+                                   'alpha-flight-group-limited-lsg-lufthansa-service-holding-ag-merger-inquiry',
+                   'http://example.com/1'
+                 ],
+                 'markup_sections' => {
+                   'provisional_final_report' => '# Header'
+                 }
                }
              )
           end
