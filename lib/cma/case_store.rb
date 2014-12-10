@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'json'
+require 'cma/filename'
 
 module CMA
   class CaseStore
@@ -11,8 +12,14 @@ module CMA
 
     attr_accessor :location
 
-    def save(_case, filename)
+    def save(_case, filename = nil)
       FileUtils.mkdir_p(location)
+
+      filename ||= begin
+        _case.respond_to?(:original_url) or
+          raise ArgumentError, 'No filename supplied and content has no original_url'
+        Filename.for(_case.original_url)
+      end
 
       File.write(
         File.join(location, filename),

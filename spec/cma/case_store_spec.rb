@@ -34,16 +34,42 @@ module CMA
       context 'when the object to save is serializable to JSON' do
         let(:case_content) { {'a' => 'b'} }
 
-        before { case_store.save(case_content, 'ab-hash.json') }
+        context 'and a filename is supplied' do
+          before { case_store.save(case_content, 'ab-hash.json') }
 
-        it 'saves the object to the location' do
-          expect(File).to exist('spec/fixtures/store/ab-hash.json')
+          it 'saves the object to the location' do
+            expect(File).to exist('spec/fixtures/store/ab-hash.json')
+          end
+
+          it 'saves the object as JSON' do
+            reparsed_json = JSON.parse(File.read('spec/fixtures/store/ab-hash.json'))
+            expect(reparsed_json).to eql(case_content)
+          end
+
         end
 
-        it 'saves the object as JSON' do
-          reparsed_json = JSON.parse(File.read('spec/fixtures/store/ab-hash.json'))
-          expect(reparsed_json).to eql(case_content)
+        context 'no filename is supplied and CaseStore cannot make one' do
+          it 'fails' do
+            expect {
+              case_store.save(case_content)
+            }.to raise_error(ArgumentError, 'No filename supplied and content has no original_url')
+          end
         end
+
+        context 'no filename is supplied but CaseStore can make one from original_url' do
+          let(:original_url) { 'http://example.com/somewhere/nice' }
+
+          before do
+            expect(Filename).to receive(:for).with(original_url).and_return('filename.json')
+            expect(case_content).to receive(:original_url).and_return(original_url)
+          end
+
+          it 'saves' do
+            case_store.save(case_content)
+            expect(File).to exist('spec/fixtures/store/filename.json')
+          end
+        end
+
       end
     end
   end
