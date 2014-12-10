@@ -1,4 +1,8 @@
 require 'anemone'
+require 'cma/link'
+require 'cma/case_store'
+require 'cma/cc/case_list/page'
+require 'cma/cc/case'
 
 module CMA
   module CC
@@ -10,6 +14,11 @@ module CMA
 
       INTERESTED_ONLY_IN = [ATOZ, CASE, SUBPAGE, ASSET]
 
+      attr_accessor :case_store
+      def initialize
+        self.case_store = CaseStore.new
+      end
+
       ##
       # Context-sensitive set of links per page
       def link_nodes_for(page)
@@ -17,7 +26,17 @@ module CMA
       end
 
       def create_or_update_content_for(page)
-
+        original_url = CMA::Link.new(page.url).original_url
+        case original_url
+        when ATOZ
+          CMA::CC::CaseList::Page.new(page.doc).save_to(case_store)
+        when CASE
+          puts "CASE: #{original_url}"
+        when SUBPAGE
+          puts "SUBPAGE: #{original_url}"
+        when ASSET
+          puts "ASSET: #{original_url}"
+        end
       end
 
       TNA_BASE  = 'http://webarchive.nationalarchives.gov.uk/20140402141250/'
