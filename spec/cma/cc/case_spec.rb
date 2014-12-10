@@ -44,7 +44,9 @@ module CMA::CC
                {
                  'original_url' => 'http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/'\
                                    'alpha-flight-group-limited-lsg-lufthansa-service-holding-ag-merger-inquiry',
-                 'title' => 'A title'
+                 'title' => 'A title',
+                 'case_state' => 'closed',
+                 'case_type' => 'unknown'
                }
              )
           end

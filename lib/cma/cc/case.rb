@@ -38,6 +38,13 @@ module CMA
       def attributes
         instance_values
       end
+
+      def serializable_hash(options={})
+        super(options).tap do |hash|
+          hash['case_type']  = case_type
+          hash['case_state'] = case_state
+        end
+      end
     private
       # Dates could be here
       def possible_date_position_1(index)
