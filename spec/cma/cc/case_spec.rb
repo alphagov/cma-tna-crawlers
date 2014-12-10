@@ -72,18 +72,51 @@ module CMA::CC
       end
     end
 
-    describe '#add_case_detail' do
-      let(:doc) { Nokogiri::HTML(File.read('spec/fixtures/cc/archived-alpha-flight.html')) }
+    describe 'Adding more detail' do
+      let(:doc) { Nokogiri::HTML(File.read('spec/fixtures/cc/archived-arcelor-case.html')) }
 
       subject(:_case) { Case.new(original_url, title) }
 
-      before { _case.add_case_detail(doc) }
+      describe '#add_case_detail' do
+        before { _case.add_case_detail(doc) }
 
-      it 'parses the date of referral' do
-        expect(_case.date_of_referral).to eql(Date.new(2011, 10, 10))
+        it 'parses the date of referral' do
+          expect(_case.date_of_referral).to eql(Date.new(2004, 9, 10))
+        end
+        it 'parses the statutory deadline' do
+          expect(_case.statutory_deadline).to eql(Date.new(2005, 2, 24))
+        end
       end
-      it 'parses the statutory deadline' do
-        expect(_case.statutory_deadline).to eql(Date.new(2012, 3, 25))
+
+      describe '#add_markdown_detail' do
+        let(:subpage_doc) { Nokogiri::HTML(File.read('spec/fixtures/cc/archived-arcelor-final-report.html')) }
+
+        before do
+          _case.add_markdown_detail(subpage_doc, 'provisional_final_report')
+        end
+
+        it 'added the section' do
+          expect(_case.markup_sections['provisional_final_report']).not_to be_blank
+        end
+
+        describe 'the section' do
+          subject(:section_markdown) { _case.markup_sections['provisional_final_report'] }
+
+          it { should include('## Final report and Appendices &amp; Glossary') }
+          it 'has nothing above the title (this is repeated and parsed elsewhere)' do
+            expect(section_markdown).not_to include('Statutory deadline')
+            expect(section_markdown).not_to include('# Arcelor SA')
+          end
+          it 'leaves no TNA parts of URLs' do
+            expect(section_markdown).not_to include('http://webarchive.nationalarchives.gov.uk/')
+          end
+          it 'transforms TNA URLs to their original form' do
+            expect(section_markdown).to include(
+              'http://www.competition-commission.org.uk/'\
+              'assets/competitioncommission/docs/pdf/non-inquiry/rep_pub/reports/2005/fulltext/498.pdf'
+            )
+          end
+        end
       end
     end
   end
