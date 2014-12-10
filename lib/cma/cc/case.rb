@@ -36,6 +36,8 @@ module CMA
           doc, [possible_date_position_1(2), possible_date_position_2(2)])
         self.statutory_deadline = parse_date_at_xpath(
           doc, [possible_date_position_1(3), possible_date_position_2(3)])
+
+        add_markdown_detail(doc, 'core_documents')
       end
 
       def attributes

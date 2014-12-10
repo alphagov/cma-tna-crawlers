@@ -114,6 +114,9 @@ module CMA::CC
         it 'parses the statutory deadline' do
           expect(_case.statutory_deadline).to eql(Date.new(2005, 2, 24))
         end
+        it 'adds a core documents section' do
+          expect(_case.markup_sections['core_documents']).to include('A full set of documents that were published')
+        end
       end
 
       describe '#add_markdown_detail' do

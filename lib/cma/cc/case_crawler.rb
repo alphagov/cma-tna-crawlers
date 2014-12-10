@@ -24,7 +24,6 @@ module CMA
         when CASE
           with_case(original_url, original_url) do |_c|
             _c.add_case_detail(page.doc)
-            case_store.save(_c)
           end
         when SUBPAGE
           with_nearest_case_matching(page.referer, CASE, original_url) do |c|
