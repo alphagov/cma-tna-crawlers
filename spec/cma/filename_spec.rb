@@ -6,16 +6,16 @@ module CMA
     describe '.for' do
       context 'original_url is a String with a path-only URI' do
         it 'makes a filename from the path' do
-          expect(Filename.for('/somewhere/nice')).to eql('somewhere-nice')
+          expect(Filename.for('/somewhere/nice')).to eql('somewhere-nice.json')
         end
         it 'makes a filename from the path with a / at the end' do
-          expect(Filename.for('/somewhere/nice/')).to eql('somewhere-nice')
+          expect(Filename.for('/somewhere/nice/')).to eql('somewhere-nice.json')
         end
       end
 
       context 'original_url is a String with an absolute URI' do
         it 'makes a filename' do
-          expect(Filename.for('http://example.com/somewhere/nice')).to eql('somewhere-nice')
+          expect(Filename.for('http://example.com/somewhere/nice')).to eql('somewhere-nice.json')
         end
       end
 

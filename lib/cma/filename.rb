@@ -6,7 +6,7 @@ module CMA
       raise ArgumentError, 'Filename.for can\'t accept a TNA URL' if
         original_url.path =~ %r{https?://}
 
-      original_url.path[1..-1].gsub('/', '-').sub(/-$/, '')
+      original_url.path[1..-1].gsub('/', '-').sub(/-$/, '') + '.json'
     end
   end
 end
