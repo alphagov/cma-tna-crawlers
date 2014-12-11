@@ -126,8 +126,16 @@ module CMA::CC
         it 'parses the statutory deadline' do
           expect(_case.statutory_deadline).to eql(Date.new(2005, 2, 24))
         end
-        it 'adds a core documents section' do
-          expect(_case.markup_sections['core_documents']).to include('A full set of documents that were published')
+
+        describe 'the markdown' do
+          subject(:markdown) { _case.markup_sections['core_documents'] }
+
+          it 'adds a core documents section' do
+            expect(markdown).to include('A full set of documents that were published')
+          end
+          it 'uses inline links - not footnote links - in markdown' do
+            expect(markdown).not_to include('[1]')
+          end
         end
 
         describe 'breaking cases' do

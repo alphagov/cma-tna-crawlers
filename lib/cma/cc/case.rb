@@ -1,5 +1,6 @@
 require 'active_model'
 require 'kramdown'
+require 'kramdown/converter/kramdown_patched'
 require 'nokogiri'
 require 'cma/markup_helpers'
 
