@@ -19,6 +19,12 @@ module CMA
         end
       end
 
+      context 'option no_extension is true' do
+        it 'doesn\'t default to adding .json' do
+          expect(Filename.for('/somewhere/nice', no_extension: true)).to eql('somewhere-nice')
+        end
+      end
+
       context 'accidentally received a TNA URL' do
         it 'stops us from shooting ourselves in the foot' do
           expect {
