@@ -16,7 +16,7 @@ module CMA
       def do_crawl(start_url, options = {})
         Anemone.crawl(start_url, options) do |crawl|
           crawl.on_every_page do |page|
-            puts "#{page.code} #{page.url}#{' <- ' if page.referer}#{page.referer}"
+            puts %(#{page.code} #{page.url}#{"\n\t  ^ #{page.referer}" if page.referer})
             create_or_update_content_for(page)
           end
 
