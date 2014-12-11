@@ -6,7 +6,7 @@ require 'cma/asset'
 
 module CMA
   module CC
-    class CaseCrawler < CMA::Crawler::Base
+    class Crawler < CMA::Crawler::Base
       ATOZ              = %r{/our-work/directory-of-all-inquiries/?\?bytype=atoz&byid=[a-z]$}
       CASE              = %r{/our-work/directory-of-all-inquiries/[a-z|A-Z|0-9|-]+$}
       SUBPAGE           = %r{/our-work/directory-of-all-inquiries/[a-z|A-Z|0-9|-]+/[a-z|A-Z|0-9|-]+(?:/[a-z|A-Z|0-9|-]+)?/?$}
@@ -23,6 +23,8 @@ module CMA
       def create_or_update_content_for(page)
         original_url = CMA::Link.new(page.url).original_url
         case original_url
+        when ATOZ
+          CMA::CC::CaseList::Page.new(page.doc).save_to(case_store)
         when CASE
           with_case(original_url, original_url) do |_c|
             _c.add_case_detail(page.doc)
@@ -57,7 +59,7 @@ module CMA
 
       TNA_BASE  = 'http://webarchive.nationalarchives.gov.uk/20140402141250/'
       CC_BASE   = 'http://www.competition-commission.org.uk/'
-      DIRECTORY_A_TO_Z = File.join(TNA_BASE, CC_BASE, '/our-work/directory-of-all-inquiries?bytype=atoz')
+      DIRECTORY_A_TO_Z = File.join(TNA_BASE, CC_BASE, '/our-work/directory-of-all-inquiries?bytype=atoz&byid=a')
 
       def crawl!
         do_crawl(DIRECTORY_A_TO_Z) do |crawl|
