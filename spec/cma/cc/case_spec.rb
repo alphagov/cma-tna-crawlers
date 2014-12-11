@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'cma/cc/case'
+require 'cma/asset'
 require 'nokogiri'
 
 module CMA::CC
@@ -57,6 +58,10 @@ module CMA::CC
             subpage_doc = Nokogiri::HTML(File.read('spec/fixtures/cc/archived-arcelor-final-report.html'))
             _case.markup_sections['provisional_final_report'] = '# Header'
             _case.original_urls << 'http://example.com/1'
+            _case.assets << CMA::Asset.new('http://assets.example.com/a.pdf', _case, 'plain content', 'text/plain')
+            # Try and add a duplicate. I dare you
+            _case.assets << CMA::Asset.new('http://assets.example.com/a.pdf', _case,
+                                           'different content, we don\'t care', 'text/plain')
           end
 
           it 'serializes to JSON' do
@@ -74,7 +79,14 @@ module CMA::CC
                  ],
                  'markup_sections' => {
                    'provisional_final_report' => '# Header'
-                 }
+                 },
+                 'assets' => [
+                   {
+                     'original_url' => 'http://assets.example.com/a.pdf',
+                     'content_type' => 'text/plain',
+                     'filename'     => 'our-work-directory-of-all-inquiries-alpha-flight-group-limited-lsg-lufthansa-service-holding-ag-merger-inquiry/a.pdf'
+                   }
+                 ]
                }
              )
           end

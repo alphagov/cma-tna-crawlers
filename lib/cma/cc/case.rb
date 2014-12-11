@@ -23,6 +23,21 @@ module CMA
         end
       end
 
+      def assets
+        @assets ||= Set.new
+      end
+
+      def assets=(array)
+        @assets = Set.new(array.map do |v|
+                            Asset.new(
+                              v['original_url'],
+                              self,
+                              nil,
+                              v['content_type']
+                            )
+                          end)
+      end
+
       def original_urls
         @original_urls ||= Set.new([original_url])
       end
