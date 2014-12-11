@@ -13,7 +13,7 @@ describe CMA::Asset do
     Given(:content)      { 'Not really the contents of a PDF' }
     Given(:content_type) { 'application/pdf' }
 
-    subject(:asset) { CMA::Asset.new(original_url, _case, content, content_type) }
+    When(:asset) { CMA::Asset.new(original_url, _case, content, content_type) }
 
     Then { asset.content           == 'Not really the contents of a PDF' }
     Then { asset.content_type      == 'application/pdf' }
@@ -27,6 +27,16 @@ describe CMA::Asset do
         'content_type' => 'application/pdf',
         'filename'     => 'case-base-name/APS-letter.pdf'
       })
+    end
+
+    context 'We mistakenly feed Asset a TNA URL' do
+      Given(:original_url) do
+        'http://webarchive.nationalarchives.gov.uk/20140402141250/'\
+        'http://www.competition-commission.org.uk/assets/'\
+        'competitioncommission/docs/pdf/non-inquiry/rep_pub/reports/2004/fulltext/487ad.pdf'
+      end
+
+      Then { asset == Failure(ArgumentError, /TNA URL/) }
     end
 
     describe 'equality' do

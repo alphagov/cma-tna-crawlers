@@ -9,6 +9,9 @@ module CMA
     attr_accessor :original_url, :content, :content_type, :owner
 
     def initialize(original_url, owner, content, content_type)
+      if original_url =~ Link::TNA_TIMESTAMP
+        raise ArgumentError, "Attempted to create Asset with a TNA URL #{original_url}"
+      end
       self.original_url = original_url
       self.owner        = owner
       self.content      = content
