@@ -25,20 +25,20 @@ module CMA
         end
       end
 
-      def with_case(url, from = nil)
-        _case = case_store.find(url)
+      def with_case(original_url, from = nil)
+        _case = case_store.find(original_url)
         if _case
           _case.original_urls << from.to_s if from
           yield _case
           case_store.save(_case)
         else
-          puts "*** WARN: case for #{url} not found"
+          puts "*** WARN: case for #{original_url} not found"
         end
       end
 
       def with_nearest_case_matching(url, regex, from = nil, &block)
         page = find_nearest_page_matching(url, regex)
-        raise ArgumentError, "No page matching #{regex} available for #{url}" if page.nil?
+        raise Errno::ENOENT, "No page matching #{regex} available for #{url}" if page.nil?
         with_case(Link.new(page.url).original_url, from, &block)
       end
 
@@ -52,7 +52,7 @@ module CMA
         page = @crawl.pages[url]
         return page if page.nil? || page.url.to_s =~ regex
 
-        find_nearest_page_matching(Link.new(page.referer).original_url, regex)
+        find_nearest_page_matching(page.referer, regex)
       end
     end
   end
