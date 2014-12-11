@@ -150,7 +150,7 @@ module CMA
       def parse_date_at_xpath(doc, try_xpath)
         xpath = try_xpath.find { |xpath| doc.at_xpath(xpath) }
         return if (date_node = doc.at_xpath(xpath)).nil?
-        date_node.text =~ /([0-9]{2}\.[0-9]{2}\.[0-9]{2})/
+        date_node.text =~ /([0-9]{1,2}\.[0-9]{2}\.[0-9]{2})/
         Date.strptime($1, '%d.%m.%y') if xpath
       end
     end

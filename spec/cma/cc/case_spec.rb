@@ -129,6 +129,17 @@ module CMA::CC
         it 'adds a core documents section' do
           expect(_case.markup_sections['core_documents']).to include('A full set of documents that were published')
         end
+
+        describe 'breaking cases' do
+          describe 'McGill has a date of 2.10.12 (broke the date parser)' do
+            let(:doc) { Nokogiri::HTML(File.read('spec/fixtures/cc/breaking-cases/mcgill.html')) }
+
+            it 'is all fine now' do
+              expect(_case.date_of_referral).to eql(Date.new(2012, 4, 18))
+              expect(_case.statutory_deadline).to eql(Date.new(2012, 10, 2))
+            end
+          end
+        end
       end
 
       describe '#add_markdown_detail' do
