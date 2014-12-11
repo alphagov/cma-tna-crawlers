@@ -82,6 +82,8 @@ module CMA
         'http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/arcelor-sa-corus-uk-limited'
       end
 
+      after  { FileUtils.rmtree(case_store.location) }
+
       let!(:case_to_save) do
         CC::Case.create(original_url, title)
       end
