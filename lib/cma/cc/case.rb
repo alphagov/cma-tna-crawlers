@@ -1,4 +1,4 @@
-require 'active_model'
+require 'cma/case'
 require 'kramdown'
 require 'kramdown/converter/kramdown_patched'
 require 'nokogiri'
@@ -6,14 +6,10 @@ require 'cma/markup_helpers'
 
 module CMA
   module CC
-    class Case
+    class Case < CMA::Case
       include ActiveModel::Serializers::JSON
 
       attr_accessor :original_url, :title, :date_of_referral, :statutory_deadline
-
-      def case_state
-        'closed'
-      end
 
       def case_type
         case title
@@ -22,25 +18,6 @@ module CMA
         else
           'unknown'
         end
-      end
-
-      def assets
-        @assets ||= Set.new
-      end
-
-      def assets=(array)
-        @assets = Set.new(array.map do |v|
-                            Asset.new(
-                              v['original_url'],
-                              self,
-                              nil,
-                              v['content_type']
-                            )
-                          end)
-      end
-
-      def original_urls
-        @original_urls ||= Set.new([original_url])
       end
 
       def self.from_link(link)
@@ -54,24 +31,6 @@ module CMA
           doc, [possible_date_position_1(3), possible_date_position_2(3)])
 
         add_markdown_detail(doc, 'core_documents')
-      end
-
-      def attributes
-        instance_values
-      end
-
-      def attributes=(hash)
-        hash.each_pair do |k, v|
-          setter = "#{k}="
-          self.send(setter, v) if respond_to?(setter)
-        end
-      end
-
-      def serializable_hash(options={})
-        super(options).tap do |hash|
-          hash['case_type']  = case_type
-          hash['case_state'] = case_state
-        end
       end
 
       # body types that will need body generation/ordering later

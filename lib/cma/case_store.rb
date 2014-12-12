@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'json'
 require 'cma/filename'
+require 'cma/oft/case'
 require 'cma/cc/case'
 
 module CMA
@@ -29,12 +30,12 @@ module CMA
     end
 
     def find(original_url)
-      class_to_load.new.from_json File.read(full_filename(original_url))
+      class_to_load(original_url).new.from_json File.read(full_filename(original_url))
     end
 
     private
-    def class_to_load
-      CC::Case
+    def class_to_load(original_url)
+      original_url.include?('oft.gov.uk') ? OFT::Case : CC::Case
     end
 
     def full_filename(original_url)

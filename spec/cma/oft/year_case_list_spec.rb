@@ -43,7 +43,9 @@ module CMA::OFT
           JSON.parse(first.to_json) == {
             'title' => 'Investigation into the supply of healthcare products',
             'original_url' =>
-              'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2013/healthcare-products'
+              'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2013/healthcare-products',
+            'case_state' => 'closed',
+            'case_type' => 'unknown'
           }
         end
 

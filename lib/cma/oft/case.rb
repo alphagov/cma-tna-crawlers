@@ -1,7 +1,13 @@
+require 'cma/case'
+
 module CMA
   module OFT
-    class Case
+    class Case < CMA::Case
       attr_accessor :title, :original_url, :summary, :body
+
+      def case_type
+        'unknown'
+      end
 
       def add_summary(doc)
         self.summary = doc.at_xpath('//div[@class="intro"]/p[2]').content
