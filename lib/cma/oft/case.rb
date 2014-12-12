@@ -3,7 +3,7 @@ require 'cma/case'
 module CMA
   module OFT
     class Case < CMA::Case
-      attr_accessor :title, :original_url, :summary, :body
+      attr_accessor :summary, :body
 
       def case_type
         'unknown'

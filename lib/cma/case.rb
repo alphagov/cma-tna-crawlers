@@ -4,6 +4,8 @@ module CMA
   class Case
     include ActiveModel::Serializers::JSON
 
+    attr_accessor :title, :original_url
+
     def assets
       @assets ||= Set.new
     end

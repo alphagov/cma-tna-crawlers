@@ -9,7 +9,7 @@ module CMA
     class Case < CMA::Case
       include ActiveModel::Serializers::JSON
 
-      attr_accessor :original_url, :title, :date_of_referral, :statutory_deadline
+      attr_accessor :date_of_referral, :statutory_deadline
 
       def case_type
         case title
