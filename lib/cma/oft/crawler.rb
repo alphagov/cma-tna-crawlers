@@ -1,5 +1,6 @@
 require 'anemone'
 require 'cma/crawler/base'
+require 'cma/oft/year_case_list'
 
 module CMA
   module OFT
@@ -70,7 +71,9 @@ module CMA
         original_url = CMA::Link.new(page.url).original_url
         case original_url
         when CASE_LIST_INTERSTITIAL then puts ' Interstitial'
-        when CASE_LIST_FOR_YEAR     then puts ' Year Case list'
+        when CASE_LIST_FOR_YEAR
+          puts ' Year Case list'
+          CMA::OFT::YearCaseList.new(page.doc).save_to(case_store)
         when CASE                   then puts ' Case'
         when CASE_DETAIL            then puts ' Case Detail'
         when ASSET                  then puts ' ASSET'
