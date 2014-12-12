@@ -13,10 +13,11 @@ module CMA
       end
 
       attr_reader :crawl
-      def do_crawl(start_url, options = {})
+      def do_crawl(start_url, options = {print_referer: false, newline_after_url: true})
         Anemone.crawl(start_url, options) do |crawl|
           crawl.on_every_page do |page|
-            puts %(#{page.code} #{page.url}#{"\n\t  ^ #{page.referer}" if page.referer})
+            code_url = "#{page.code} #{page.url}#{"\n" if options[:newline_after_url]}"
+            print %(#{code_url}#{"\n\t  ^ #{page.referer}" if page.referer && options[:print_referer]})
             create_or_update_content_for(page)
           end
 
