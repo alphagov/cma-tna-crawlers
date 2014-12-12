@@ -11,6 +11,21 @@ module CMA::OFT
           Nokogiri::HTML(File.read("spec/fixtures/oft/#{filename}")))
       end
 
+      context 'Competition case list 2011 (has case not on by date page)' do
+        Given(:filename) { 'competition-case-list-2011.html' }
+
+        describe 'adding a virtual case "Access control and alarm systems case" to the list' do
+          it 'adds one to the list' do
+            expect(list.cases.size).to eql(7)
+          end
+
+          When (:_case) { list.cases.last }
+
+          Then { _case.title        == 'Access control and alarm systems case' }
+          Then { _case.original_url == 'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2011/access-control-alarm-systems' }
+        end
+      end
+
       context 'Competition case list 2013' do
         Given(:filename) { 'competition-case-list-2013.html' }
 
