@@ -26,6 +26,13 @@ module CMA::OFT
 
         Then { expect(_case.summary).to include('1.  To examine the scope') }
       end
+
+      context 'Sports goods - no content, just nav found' do
+        Given(:filename) { 'sports-goods.html' }
+
+        Then { expect(_case.summary).to include('In September 2009, following the receipt of information') }
+        Then { expect(_case.summary).not_to include('[Back to top<span>') }
+      end
     end
   end
 end

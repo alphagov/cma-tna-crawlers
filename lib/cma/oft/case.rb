@@ -13,10 +13,18 @@ module CMA
 
       def add_summary(doc)
         self.summary = begin
-          content = doc.at_first_xpath(
-            '//div[@class="intro"]/p[2]',
-            '//div[@class="intro"]/ol'
-          ).inner_html.to_s
+          # Sports goods weirdness
+          sports_goods_content = doc.at_xpath(
+            '//div[@class="intro"]/p/br[6]/following-sibling::text()[string-length() > 2]')
+
+          content = if sports_goods_content
+                      sports_goods_content.content
+                    else
+                      doc.at_first_xpath(
+                        '//div[@class="intro"]/p[2]',
+                        '//div[@class="intro"]/ol'    # BAA weirdness
+                      ).inner_html.to_s
+                    end
 
           Kramdown::Document.new(content, input: 'html').to_kramdown.gsub(/\{:.+?}/m, '')
         end
