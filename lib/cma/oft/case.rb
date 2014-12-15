@@ -1,6 +1,7 @@
 require 'cma/case'
 require 'cma/markup_helpers'
 require 'kramdown'
+require 'kramdown/converter/kramdown_patched'
 
 module CMA
   module OFT
@@ -26,7 +27,32 @@ module CMA
                       ).inner_html.to_s
                     end
 
-          Kramdown::Document.new(content, input: 'html').to_kramdown.gsub(/\{:.+?}/m, '')
+          to_kramdown(content)
+        end
+      end
+
+      def to_kramdown(content)
+        Kramdown::Document.new(content, input: 'html').to_kramdown.gsub(/\{:.+?}/m, '')
+      end
+
+      def add_detail(doc)
+        doc.dup.at_css('.body-copy').tap do |body_copy|
+          %w(div span script p.backtotop p.previouspage).each do |selector|
+            body_copy.css(selector).remove
+          end
+
+          %w(
+              //table/@*
+              //a/@target
+              //a[@name]
+              //comment()
+            ).each do |superfluous_nodes|
+            body_copy.xpath(superfluous_nodes).each(&:unlink)
+          end
+
+          body_copy.remove_tna_part_from_hrefs!
+
+          self.body = to_kramdown(body_copy.inner_html.to_s)
         end
       end
 

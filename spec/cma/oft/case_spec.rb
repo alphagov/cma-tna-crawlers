@@ -4,7 +4,7 @@ require 'nokogiri'
 
 module CMA::OFT
   describe Case do
-    Given(:_case) { Case.create('http://example.com/1', 'title') }
+    When(:_case) { Case.create('http://example.com/1', 'title') }
 
     Then { _case.title        == 'title' }
     Then { _case.original_url == 'http://example.com/1' }
@@ -31,8 +31,32 @@ module CMA::OFT
         Given(:filename) { 'sports-goods.html' }
 
         Then { expect(_case.summary).to include('In September 2009, following the receipt of information') }
-        Then { expect(_case.summary).not_to include('[Back to top<span>') }
+        And  { expect(_case.summary).not_to include('[Back to top<span>') }
       end
+    end
+
+    describe '.add_detail' do
+      Given(:detail) do
+        Nokogiri::HTML(File.read('spec/fixtures/oft/market-studies-2002-taxi-services-case-detail.html'))
+      end
+
+      When { _case.add_detail(detail) }
+
+      Invariant { expect(_case.body).not_to include '<p>'}
+      Invariant { expect(_case.body).not_to include '&nbsp;'}
+      Invariant { expect(_case.body).not_to include '<script'}
+      Invariant { expect(_case.body).not_to include '<span>'}
+      Invariant { expect(_case.body).not_to include '<div'}
+      Invariant { expect(_case.body).not_to include '[Initial'}
+      Invariant { expect(_case.body).not_to include 'backtotop'}
+      Invariant { expect(_case.body).not_to include('[1]: http://webarchive')}
+
+      Then { expect(_case.body).to include('Purpose of the study') }
+      And  { expect(_case.body).not_to include(
+        'http://webarchive.nationalarchives.gov.uk/20140402141250/http://oft.gov.uk/shared_oft/reports/comp_policy/oft676annexee.pdf')
+      }
+      And  { expect(_case.body).to include('http://oft.gov.uk/shared_oft/reports/comp_policy/oft676annexee.pdf') }
+
     end
   end
 end
