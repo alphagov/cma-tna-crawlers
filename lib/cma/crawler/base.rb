@@ -18,7 +18,12 @@ module CMA
           crawl.on_every_page do |page|
             code_url = "#{page.code} #{page.url}#{"\n" if options[:newline_after_url]}"
             print %(#{code_url}#{"\n\t  ^ #{page.referer}" if page.referer && options[:print_referer]})
-            create_or_update_content_for(page)
+
+            if page.code == 404
+              puts 'WARN: skipping'
+            else
+              create_or_update_content_for(page)
+            end
           end
 
           @crawl = crawl

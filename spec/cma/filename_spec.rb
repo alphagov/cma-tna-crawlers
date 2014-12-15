@@ -32,6 +32,20 @@ module CMA
           }.to raise_error(ArgumentError, /TNA URL/)
         end
       end
+
+      context 'odd cases' do
+        it 'resolves doorstep selling correctly' do
+          expect(
+            Filename.for('http://www.oft.gov.uk/OFTwork/markets-work/super-complaints/doorstep-selling')
+          ).to eql('OFTwork-oft-current-cases-market-studies-2002-doorstep-selling.json')
+        end
+
+        it 'resolves Northern Rock correctly' do
+          expect(
+            Filename.for('http://www.oft.gov.uk/OFTwork/markets-work/northern-rock')
+          ).to eql('OFTwork-oft-current-cases-market-studies-2008-northern-rock.json')
+        end
+      end
     end
   end
 end

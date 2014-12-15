@@ -20,6 +20,14 @@ module CMA::OFT
           'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2011/electronic-platform-services')
       end
 
+      describe 'Crawler::CASE' do
+        it 'knows about weird markets' do
+          expect(Crawler::CASE).to match(
+            'http://webarchive.nationalarchives.gov.uk/20140402141250/'\
+            'http://www.oft.gov.uk/OFTwork/oft-current-cases/markets-work2013/quick-house-sales')
+        end
+      end
+
       describe 'Crawler::CASE_DETAIL' do
         it 'knows about markets work' do
           expect(Crawler::CASE_DETAIL).to match(
@@ -35,6 +43,11 @@ module CMA::OFT
           expect(Crawler::CASE_DETAIL).to match(
             'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
             'http://www.oft.gov.uk/OFTwork/oft-current-cases/market-studies-2005/PPRS')
+        end
+        it 'does not match the completed cases list' do
+          expect(Crawler::CASE_DETAIL).not_to match(
+            'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
+            'http://www.oft.gov.uk/OFTwork/consumer-enforcement/consumer-enforcement-completed/')
         end
       end
     end

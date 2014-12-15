@@ -8,6 +8,10 @@ module CMA
     # Crawl everything but mergers
     #
     class Crawler < CMA::Crawler::Base
+      TNA_BASE      = 'http://webarchive.nationalarchives.gov.uk/20140402141250/'
+      OFT_BASE      = 'http://www.oft.gov.uk/'
+      CURRENT_CASES_ROOT = File.join(TNA_BASE, OFT_BASE, '/OFTwork/oft-current-cases/')
+
       # Just the page with A-Z links and order by links, no data, e.g.
       # http://webarchive.nationalarchives.gov.uk/20140402163422/http://www.oft.gov.uk/OFTwork/oft-current-cases/market-studies-2005/
       CASE_LIST_INTERSTITIAL =
@@ -29,14 +33,14 @@ module CMA
       CASE =
         %r{
           /OFTwork/oft-current-cases/
-          (((competition|consumer)-case-list-20[0-9]{2})|(markets?-(studies|work)-[0-9]{4}))
+          (((competition|consumer)-case-list-20[0-9]{2})|(markets?-(studies|work)-?[0-9]{4}))
           /[a-z|A-Z|0-9|-]+/?$
-      }x
+        }x
       CASE_DETAIL        =
         %r{
           /OFTwork/
           (?:
-            (?:competition-act-and-cartels|consumer-enforcement)|
+            (?:competition-act-and-cartels)|
             (?:markets-work|(?:oft-current-cases/market-studies-[0-9]{4}))|
             (?:consumer-enforcement/consumer-enforcement-completed)
           )
@@ -50,7 +54,28 @@ module CMA
         CASE_LIST_FOR_YEAR,
         CASE,
         CASE_DETAIL,
-        ASSET
+        # ASSET
+      ]
+
+      IGNORE_EXPLICITLY = [
+        # Does not exist in TNA at this or other timestamps
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2014/?Order=Date&currentLetter=A',
+        # Does not exist in TNA at this or other timestamps
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/oft-current-cases/consumer-case-list-2013/air-travel',
+        # Not in current or completed cases pages, or linked to from anywhere except other case pages (Pegasus)
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/consumer-enforcement/consumer-enforcement-completed/retirement-homes/',
+        # FIXME: No way to handle this - nested, not single CASE_DETAIL
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/hombuilding-updates',
+        # FIXME: No way to handle this - nested, not single CASE_DETAIL
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/secondhandcarsqanda',
+        # FIXME: Generalised help document
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/QandAs',
+        # FIXME: Generalised help document
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/homebuying-and-selling-QandAs',
+        # FIXME: Generalised help document
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/consumer-contracts-QandAs',
+        # FIXME: Generalised help document
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/market-studies-further-info/',
       ]
 
       ##
@@ -70,22 +95,25 @@ module CMA
       def create_or_update_content_for(page)
         original_url = CMA::Link.new(page.url).original_url
         case original_url
-        when CASE_LIST_INTERSTITIAL then puts ' Interstitial'
         when CASE_LIST_FOR_YEAR
           puts ' Year Case list'
           CMA::OFT::YearCaseList.new(page.doc).save_to(case_store)
-        when CASE                   then puts ' Case'
-        when CASE_DETAIL            then puts ' Case Detail'
-        when ASSET                  then puts ' ASSET'
+        when CASE
+          puts ' Case'
+          with_case(original_url, original_url) do |_case|
+            _case.add_summary(page.doc)
+          end
+        when CASE_DETAIL
+          puts ' Case Detail'
+          with_case(CMA::Link.new(page.referer).original_url, original_url) do |_case|
+            _case.add_detail(page.doc)
+          end
+        when ASSET then puts ' ASSET'
         end
       end
 
-      TNA_BASE      = 'http://webarchive.nationalarchives.gov.uk/20140402141250/'
-      OFT_BASE      = 'http://www.oft.gov.uk/'
-      CURRENT_CASES_ROOT = File.join(TNA_BASE, OFT_BASE, '/OFTwork/oft-current-cases/')
-
       def crawl!
-        do_crawl(CURRENT_CASES_ROOT, newline_after_url: false) do |crawl|
+        do_crawl(CURRENT_CASES_ROOT, newline_after_url: false, print_referer: true) do |crawl|
 
           crawl.focus_crawl do |page|
             next [] if page.doc.nil?
@@ -93,9 +121,9 @@ module CMA
             link_nodes_for(page).map do |a|
               next unless (href = a['href'])
 
-              if FOLLOW_ONLY.any? { |pattern| pattern =~ href }
+              if should_follow?(href)
                 begin
-                  URI(href)
+                  canonicalize_uri(href)
                 rescue URI::InvalidURIError
                   puts "MALFORMED URL: #{href} <- #{page.url}"
                 end
@@ -104,6 +132,23 @@ module CMA
 
           end
         end
+      end
+
+      def should_follow?(href)
+        FOLLOW_ONLY.any? { |pattern| pattern =~ href } &&
+          IGNORE_EXPLICITLY.none? { |pattern| pattern == href }
+      end
+
+      # aka how to sidestep TNA 302 redirect landmines.
+      # Add things here to point to a canonical version of a URL (if, for example, another
+      # version of the URL exists that isn't linked to from the case pages)
+      MAPPINGS = {
+        TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/doorstep-selling' =>
+          TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/super-complaints/doorstep-selling'
+      }
+      def canonicalize_uri(href)
+        href = MAPPINGS[href] || href
+        URI(href)
       end
 
     end
