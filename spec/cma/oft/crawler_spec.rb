@@ -49,6 +49,16 @@ module CMA::OFT
             'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
             'http://www.oft.gov.uk/OFTwork/consumer-enforcement/consumer-enforcement-completed/')
         end
+        it 'matches airline passenger fuel surcharges' do
+          expect(Crawler::CASE_DETAIL).to match(
+            'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
+            'http://www.oft.gov.uk/OFTwork/competition-act-and-cartels/ca98/closure/fuel-surcharges/')
+        end
+        it 'matches dairy products' do
+          expect(Crawler::CASE_DETAIL).to match(
+            'http://webarchive.nationalarchives.gov.uk/20140402141250/'\
+            'http://www.oft.gov.uk/OFTwork/competition-act-and-cartels/ca98-current/dairy-products/')
+        end
       end
     end
 

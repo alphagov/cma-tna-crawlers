@@ -1,5 +1,6 @@
 require 'anemone'
 require 'cma/crawler/base'
+require 'cma/asset'
 require 'cma/oft/year_case_list'
 
 module CMA
@@ -40,7 +41,7 @@ module CMA
         %r{
           /OFTwork/
           (?:
-            (?:competition-act-and-cartels)|
+            (?:competition-act-and-cartels(?:/ca98(-current)?(?:/closure)?)?)|
             (?:markets-work|(?:oft-current-cases/market-studies-[0-9]{4}))|
             (?:consumer-enforcement/consumer-enforcement-completed)
           )
@@ -54,7 +55,7 @@ module CMA
         CASE_LIST_FOR_YEAR,
         CASE,
         CASE_DETAIL,
-        # ASSET
+        ASSET
       ]
 
       IGNORE_EXPLICITLY = [
@@ -76,6 +77,8 @@ module CMA
         TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/consumer-contracts-QandAs',
         # FIXME: Generalised help document
         TNA_BASE + 'http://www.oft.gov.uk/OFTwork/markets-work/market-studies-further-info/',
+        # Woah, what?
+        TNA_BASE + 'http://stg-new-oft:8080/OFTwork/competition-act-and-cartels/ca98-current/commercial-vehicle-criminal/'
       ]
 
       ##
@@ -105,10 +108,16 @@ module CMA
           end
         when CASE_DETAIL
           puts ' Case Detail'
-          with_case(CMA::Link.new(page.referer).original_url, original_url) do |_case|
+          with_nearest_case_matching(page.referer, CASE) do |_case|
             _case.add_detail(page.doc)
           end
-        when ASSET then puts ' ASSET'
+        when ASSET
+          puts ' ASSET'
+          with_nearest_case_matching(page.referer, CASE) do |_case|
+            asset = CMA::Asset.new(original_url, _case, page.body, page.headers['content-type'].first)
+            asset.save!(case_store.location)
+            _case.assets << asset
+          end
         end
       end
 
