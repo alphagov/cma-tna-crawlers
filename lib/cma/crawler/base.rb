@@ -19,16 +19,24 @@ module CMA
             code_url = "#{page.code} #{page.url}#{"\n" if options[:newline_after_url]}"
             print %(#{code_url}#{"\n\t  ^ #{page.referer}" if page.referer && options[:print_referer]})
 
-            if page.code == 404
-              puts 'WARN: skipping'
-            else
+            begin
               create_or_update_content_for(page)
+            rescue => e
+              sleep(1)
+              dump_referer_chain(page)
+              raise e
             end
           end
 
           @crawl = crawl
           yield @crawl
         end
+      end
+
+      def dump_referer_chain(page, depth = 0)
+        depth.times { print "\t" }
+        puts page.url
+        dump_referer_chain(@crawl.pages[page.referer], depth + 1) if page.referer
       end
 
       def with_case(original_url, from = nil)
