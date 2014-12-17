@@ -33,6 +33,15 @@ module CMA::OFT
         Then { expect(_case.summary).to include('In September 2009, following the receipt of information') }
         And  { expect(_case.summary).not_to include('[Back to top<span>') }
       end
+
+      context 'Consumer IT (summary split over elements)' do
+        Given(:filename) { 'consumer-it-services.html' }
+
+        Then { expect(_case.summary).to include('The purpose of study')}
+        Then { expect(_case.summary).to include('address competition concerns')}
+        Then { expect(_case.summary).to include('examine whether there')}
+        Then { expect(_case.summary).not_to include('case page')}
+      end
     end
 
     describe '.add_detail' do

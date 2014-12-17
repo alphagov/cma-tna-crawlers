@@ -21,10 +21,8 @@ module CMA
           content = if sports_goods_content
                       sports_goods_content.content
                     else
-                      doc.at_first_xpath(
-                        '//div[@class="intro"]/p[2]',
-                        '//div[@class="intro"]/ol'    # BAA weirdness
-                      ).inner_html.to_s
+                      doc.xpath(
+                        "//div[contains(@class, 'intro')]/*[position() > 2]").inner_html.to_s
                     end
 
           to_kramdown(content)
