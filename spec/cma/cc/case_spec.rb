@@ -151,34 +151,46 @@ module CMA::CC
       end
 
       describe '#add_markdown_detail' do
-        let(:subpage_doc) { Nokogiri::HTML(File.read('spec/fixtures/cc/archived-arcelor-final-report.html')) }
+        let(:subpage_doc) { Nokogiri::HTML(File.read(filename)) }
 
         before do
           _case.add_markdown_detail(subpage_doc, 'provisional_final_report')
         end
 
-        it 'added the section' do
-          expect(_case.markup_sections['provisional_final_report']).not_to be_blank
-        end
+        context 'happy path' do
+          let(:filename) { 'spec/fixtures/cc/archived-arcelor-final-report.html' }
 
-        describe 'the section' do
-          subject(:section_markdown) { _case.markup_sections['provisional_final_report'] }
+          it 'added the section' do
+            expect(_case.markup_sections['provisional_final_report']).not_to be_blank
+          end
 
-          it { should include('## Final report and Appendices &amp; Glossary') }
-          it 'has nothing above the title (this is repeated and parsed elsewhere)' do
-            expect(section_markdown).not_to include('Statutory deadline')
-            expect(section_markdown).not_to include('# Arcelor SA')
-          end
-          it 'leaves no TNA parts of URLs' do
-            expect(section_markdown).not_to include('http://webarchive.nationalarchives.gov.uk/')
-          end
-          it 'transforms TNA URLs to their original form' do
-            expect(section_markdown).to include(
-              'http://www.competition-commission.org.uk/'\
+          describe 'the section' do
+            subject(:section_markdown) { _case.markup_sections['provisional_final_report'] }
+
+            it { should include('## Final report and Appendices &amp; Glossary') }
+            it 'has nothing above the title (this is repeated and parsed elsewhere)' do
+              expect(section_markdown).not_to include('Statutory deadline')
+              expect(section_markdown).not_to include('# Arcelor SA')
+            end
+            it 'leaves no TNA parts of URLs' do
+              expect(section_markdown).not_to include('http://webarchive.nationalarchives.gov.uk/')
+            end
+            it 'transforms TNA URLs to their original form' do
+              expect(section_markdown).to include(
+                                            'http://www.competition-commission.org.uk/'\
               'assets/competitioncommission/docs/pdf/non-inquiry/rep_pub/reports/2005/fulltext/498.pdf'
-            )
+                                          )
+            end
           end
         end
+
+        context 'Stericycle failure' do
+          let(:filename) { 'spec/fixtures/cc/breaking-cases/stericycle-span-problem.html' }
+          it 'added the section' do
+            expect(_case.markup_sections['provisional_final_report']).not_to be_blank
+          end
+        end
+
       end
     end
   end

@@ -77,7 +77,8 @@ module CMA
           # Move text in leftover spans that were .mediaLinkText
           # to the link as a parent
           markup.xpath('.//span').each do |span|
-            span.at_xpath('./text()').parent = span.parent
+            text_node        = span.at_xpath('./text()')
+            text_node.parent = span.parent if text_node
             span.remove
           end
 
