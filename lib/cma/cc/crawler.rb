@@ -17,7 +17,11 @@ module CMA
       ##
       # Context-sensitive set of links per page
       def link_nodes_for(page)
-        page.doc.css('#mainColumn a')
+        nodes  = page.doc.css('#mainColumn a')
+        if [CASE, SUBPAGE].any? { |match| page.url.to_s =~ match }
+          nodes += page.doc.css('#leftNavigation a')
+        end
+        nodes
       end
 
       def create_or_update_content_for(page)
