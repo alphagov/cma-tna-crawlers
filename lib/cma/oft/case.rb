@@ -52,6 +52,12 @@ module CMA
 
           self.body = to_kramdown(body_copy.inner_html.to_s)
         end
+
+        # <meta name="DC.identifier" scheme="DCTERMS.URI"
+        #   content="http://oft.gov.uk/OFTwork/markets-work/taxis" />
+        self.original_urls << doc.at_xpath(
+          '//head/meta[@name="DC.identifier"][@scheme="DCTERMS.URI"]/@content'
+        ).to_s
       end
 
       def self.create(original_url, title)
