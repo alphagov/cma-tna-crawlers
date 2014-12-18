@@ -83,7 +83,9 @@ module CMA
 
       let(:title) { 'test_title' }
       let!(:case_to_save) do
-        klass.create(original_url, title)
+        klass.create(original_url, title).tap do |_case|
+          _case.original_urls << 'http://example.com/2'
+        end
       end
 
       subject(:_case) { case_store.find(original_url) }
@@ -101,6 +103,7 @@ module CMA
         describe 'the case' do
           example { expect(_case.title).to eql(title) }
           example { expect(_case.original_url).to eql(original_url) }
+          example { expect(_case.original_urls.size).to eql(2) }
         end
       end
 
@@ -117,6 +120,7 @@ module CMA
         describe 'the case' do
           example { expect(_case.title).to eql(title) }
           example { expect(_case.original_url).to eql(original_url) }
+          example { expect(_case.original_urls.size).to eql(2) }
         end
       end
 

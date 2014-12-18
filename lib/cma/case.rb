@@ -25,6 +25,10 @@ module CMA
       @original_urls ||= Set.new([original_url])
     end
 
+    def original_urls=(value)
+      @original_urls = Set.new(value)
+    end
+
     def attributes
       instance_values
     end
@@ -40,6 +44,7 @@ module CMA
       super(options).tap do |hash|
         hash['case_type']  = case_type
         hash['case_state'] = case_state
+        hash['original_urls'] = (original_urls << original_url).to_a
       end
     end
 
