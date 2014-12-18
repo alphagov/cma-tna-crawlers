@@ -4,6 +4,7 @@ gem 'anemone'
 gem 'kramdown'
 gem 'nokogiri'
 gem 'activemodel'
+gem 'listen'
 
 group :test do
   gem 'rspec'
