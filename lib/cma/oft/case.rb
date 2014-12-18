@@ -6,8 +6,6 @@ require 'kramdown/converter/kramdown_patched'
 module CMA
   module OFT
     class Case < CMA::Case
-      attr_accessor :summary, :body
-
       def case_type
         'unknown'
       end

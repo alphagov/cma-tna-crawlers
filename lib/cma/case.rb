@@ -1,10 +1,11 @@
 require 'active_model'
+require 'cma/asset'
 
 module CMA
   class Case
     include ActiveModel::Serializers::JSON
 
-    attr_accessor :title, :original_url
+    attr_accessor :title, :original_url, :summary, :body
 
     def assets
       @assets ||= Set.new
