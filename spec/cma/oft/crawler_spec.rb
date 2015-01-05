@@ -44,10 +44,20 @@ module CMA::OFT
             'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
             'http://www.oft.gov.uk/OFTwork/oft-current-cases/market-studies-2005/PPRS')
         end
-        it 'does not match the completed cases list' do
+        it 'does not match the consumer enforcement cases list' do
           expect(Crawler::CASE_DETAIL).not_to match(
             'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
             'http://www.oft.gov.uk/OFTwork/consumer-enforcement/consumer-enforcement-completed/')
+        end
+        it 'does not match the cartels cases list' do
+          expect(Crawler::CASE_DETAIL).not_to match(
+            'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
+            'http://www.oft.gov.uk/OFTwork/competition-act-and-cartels/criminal-cartels-completed')
+        end
+        it 'does not match the markets cases list' do
+          expect(Crawler::CASE_DETAIL).not_to match(
+            'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
+            'http://www.oft.gov.uk/OFTwork/http://www.oft.gov.uk/OFTwork/markets-work/completed')
         end
         it 'matches airline passenger fuel surcharges' do
           expect(Crawler::CASE_DETAIL).to match(

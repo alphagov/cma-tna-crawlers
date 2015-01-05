@@ -45,6 +45,8 @@ module CMA
             (?:markets-work|(?:oft-current-cases/market-studies-[0-9]{4}))|
             (?:consumer-enforcement/consumer-enforcement-completed)
           )
+          (?!/criminal-cartels-completed/?$)
+          (?!/completed/?$)
           /[a-z|A-Z|0-9|-]+/?$
         }x
 
@@ -123,23 +125,26 @@ module CMA
 
       def crawl!
         do_crawl(CURRENT_CASES_ROOT, newline_after_url: false, print_referer: true) do |crawl|
+          focus_on_interesting_body_copy_links(crawl)
+        end
+      end
 
-          crawl.focus_crawl do |page|
-            next [] if page.doc.nil?
+      def focus_on_interesting_body_copy_links(crawl)
+        crawl.focus_crawl do |page|
+          next [] if page.doc.nil?
 
-            link_nodes_for(page).map do |a|
-              next unless (href = a['href'])
+          link_nodes_for(page).map do |a|
+            next unless (href = a['href'])
 
-              if should_follow?(href)
-                begin
-                  canonicalize_uri(href)
-                rescue URI::InvalidURIError
-                  puts "MALFORMED URL: #{href} <- #{page.url}"
-                end
+            if should_follow?(href)
+              begin
+                canonicalize_uri(href)
+              rescue URI::InvalidURIError
+                puts "MALFORMED URL: #{href} <- #{page.url}"
               end
-            end.compact
+            end
+          end.compact
 
-          end
         end
       end
 
