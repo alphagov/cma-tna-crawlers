@@ -39,6 +39,11 @@ module CMA::OFT
             'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
             'http://www.oft.gov.uk/OFTwork/consumer-enforcement/consumer-enforcement-completed/ama-vitalbeauty/')
         end
+        it 'knows about consumer enforcement cases with underscores' do
+          expect(Crawler::CASE_DETAIL).to match(
+            'http://webarchive.nationalarchives.gov.uk/20140402163422/'\
+            'http://www.oft.gov.uk/OFTwork/consumer-enforcement/consumer-enforcement-completed/we_buy_any_car/')
+        end
         it 'knows about market studies cases' do
           expect(Crawler::CASE_DETAIL).to match(
             'http://webarchive.nationalarchives.gov.uk/20140402163422/'\

@@ -47,7 +47,7 @@ module CMA
           )
           (?!/criminal-cartels-completed/?$)
           (?!/completed/?$)
-          /[a-z|A-Z|0-9|-]+/?$
+          /[a-z|A-Z|0-9|_|-]+/?$
         }x
 
       ASSET              = %r{(?<!Brie1)\.pdf$} # Delicious Brie1 actually a briefing note
