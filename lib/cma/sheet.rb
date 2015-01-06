@@ -12,6 +12,13 @@ module CMA
     class Row
       DATE_FORMAT = '%d/%m/%y'
 
+      OUTCOME_MAPPINGS = {
+        'Undertakings' => 'consumer-enforcement-undertakings',
+        'Court order' => 'consumer-enforcement-court-order',
+        'No action' => 'consumer-enforcement-no-action',
+        'markets - phase 1 referral' => 'markets-phase-1-referral'
+      }
+
       def initialize(row)
         @row = row
       end
@@ -24,8 +31,13 @@ module CMA
         @row['Ref']
       end
 
+      def outcome
+        OUTCOME_MAPPINGS.fetch(@row['Outcome'])
+      end
+
       def open_date
-        Date.strptime(@row['Open date'], DATE_FORMAT)
+        date_str = @row['Open date']
+        Date.strptime(date_str, DATE_FORMAT) unless date_str.nil?
       end
 
       def decision_date
