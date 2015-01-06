@@ -13,9 +13,9 @@ module CMA
       DATE_FORMAT = '%d/%m/%y'
 
       OUTCOME_MAPPINGS = {
-        'Undertakings' => 'consumer-enforcement-undertakings',
-        'Court order' => 'consumer-enforcement-court-order',
-        'No action' => 'consumer-enforcement-no-action',
+        'Undertakings'               => 'consumer-enforcement-undertakings',
+        'Court order'                => 'consumer-enforcement-court-order',
+        'No action'                  => 'consumer-enforcement-no-action',
         'markets - phase 1 referral' => 'markets-phase-1-referral'
       }
 
