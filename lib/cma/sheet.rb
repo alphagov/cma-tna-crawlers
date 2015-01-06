@@ -37,15 +37,17 @@ module CMA
 
       def open_date
         date_str = @row['Open date']
-        Date.strptime(date_str, DATE_FORMAT) unless date_str.nil?
+        @_open_date ||=
+          Date.strptime(date_str, DATE_FORMAT) unless date_str.nil?
       end
 
       def decision_date
-        Date.strptime(@row['Decision date'], DATE_FORMAT)
+        @_decision_date ||=
+          Date.strptime(@row['Decision date'], DATE_FORMAT)
       end
 
       def link
-        CMA::Link.new(@row['Archive URL'])
+        @_link ||= CMA::Link.new(@row['Archive URL'])
       end
     end
 
