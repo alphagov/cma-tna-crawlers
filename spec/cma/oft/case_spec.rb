@@ -65,7 +65,7 @@ module CMA::OFT
         'http://webarchive.nationalarchives.gov.uk/20140402141250/http://oft.gov.uk/shared_oft/reports/comp_policy/oft676annexee.pdf')
       }
       And  { expect(_case.body).to include('http://oft.gov.uk/shared_oft/reports/comp_policy/oft676annexee.pdf') }
-      And  { expect(_case.original_urls).to include 'http://oft.gov.uk/OFTwork/markets-work/taxis' }
+      And  { expect(_case.original_urls).to include 'http://www.oft.gov.uk/OFTwork/markets-work/taxis' }
 
     end
   end

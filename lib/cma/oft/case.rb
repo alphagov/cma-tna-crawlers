@@ -55,7 +55,7 @@ module CMA
         #   content="http://oft.gov.uk/OFTwork/markets-work/taxis" />
         self.original_urls << doc.at_xpath(
           '//head/meta[@name="DC.identifier"][@scheme="DCTERMS.URI"]/@content'
-        ).to_s
+        ).to_s.sub(%r{://oft\.}, '://www.oft.')
       end
 
       def self.create(original_url, title)
