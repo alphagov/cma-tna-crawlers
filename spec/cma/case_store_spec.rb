@@ -75,6 +75,30 @@ module CMA
       end
     end
 
+    describe '#exists?' do
+      let(:case_store) { CaseStore.new('spec/fixtures/store') }
+
+      context 'the case does not exist' do
+        it 'returns false' do
+          expect(case_store.exists?('http://no.chance/etc/etc')).to eql(false)
+        end
+      end
+      context 'the case exists' do
+        let(:original_url) {
+          'http://oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2011/access-control-alarm-systems'
+        }
+        let(:case_to_save) { OFT::Case.create(original_url, 'Title') }
+
+        before do
+          case_store.save(case_to_save)
+        end
+
+        it 'returns true' do
+          expect(case_store.exists?(original_url)).to eql(true)
+        end
+      end
+    end
+
     describe '`.find`ing a case we just saved by URL' do
       let(:case_store) { CaseStore.new('spec/fixtures/store') }
 

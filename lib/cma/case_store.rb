@@ -33,6 +33,10 @@ module CMA
       class_to_load(original_url).new.from_json File.read(full_filename(original_url))
     end
 
+    def exists?(original_url)
+      File.exists?(full_filename(original_url))
+    end
+
     private
     def class_to_load(original_url)
       original_url.include?('oft.gov.uk') ? OFT::Case : CC::Case
