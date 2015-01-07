@@ -24,7 +24,8 @@ module CMA
 
         case original_url
         when CONSUMER_ENFORCEMENT_COMPLETED, MARKETS_COMPLETED
-          CMA::OFT::YearCaseList.new(page.doc).save_to(case_store)
+          CMA::OFT::YearCaseList.new(page.doc).save_to(
+            case_store, noclobber: true)
         when CASE_DETAIL
           puts ' Case Detail'
           with_case(original_url, original_url) do |_case|
