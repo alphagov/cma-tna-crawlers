@@ -84,6 +84,30 @@ module CMA::OFT
           end
         end
       end
+
+      context 'Mergers case lists' do
+        context '2003 case list (representative of 2002-2009 type)' do
+          Given(:filename) { 'mergers-case-list-2003.html' }
+
+          When(:_case) { list.cases.first }
+
+          Then { list.cases.size == 63 }
+
+          Then { _case.title        == 'Carl Zeiss / Bio-Rad' }
+          Then { _case.original_url == 'http://www.oft.gov.uk/OFTwork/mergers/Mergers_Cases/2003/CarlZeiss' }
+        end
+
+        context '2010 case list (representative of 2010-2014 type)' do
+          Given(:filename) { 'mergers-case-list-2010.html' }
+
+          When(:_case) { list.cases.first }
+
+          Then { list.cases.size == 79 }
+
+          Then { _case.title        == '2 Sisters' }
+          Then { _case.original_url == 'http://www.oft.gov.uk/OFTwork/mergers/decisions/2010/2-sisters' }
+        end
+      end
     end
   end
 end
