@@ -11,6 +11,19 @@ module CMA::OFT
           Nokogiri::HTML(File.read("spec/fixtures/oft/#{filename}")))
       end
 
+      let(:first_case_hash) {
+        {
+          'title' => 'Investigation into the supply of healthcare products',
+          'original_url' =>
+            'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2013/healthcare-products',
+          'original_urls' => [
+            'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2013/healthcare-products'
+          ],
+          'case_state' => 'closed',
+          'case_type' => 'unknown'
+        }
+      }
+
       context 'Competition case list 2011 (has case not on by date page)' do
         Given(:filename) { 'competition-case-list-2011.html' }
 
@@ -40,26 +53,33 @@ module CMA::OFT
         Then { last.original_url  == 'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2013/training-construction-industry' }
 
         Then do
-          JSON.parse(first.to_json) == {
-            'title' => 'Investigation into the supply of healthcare products',
-            'original_url' =>
-              'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2013/healthcare-products',
-            'original_urls' => [
-              'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2013/healthcare-products'
-            ],
-            'case_state' => 'closed',
-            'case_type' => 'unknown'
-          }
+          JSON.parse(first.to_json) == first_case_hash
         end
 
         describe '#save_to' do
           let(:case_store) { instance_spy CMA::CaseStore }
 
-          it 'saves all the cases to the case store' do
-            list.save_to(case_store)
+          context 'no params are given' do
+            it 'saves all the cases to the case store' do
+              list.save_to(case_store)
 
-            list.cases.each do |_case|
-              expect(case_store).to have_received(:save).with(_case)
+              list.cases.each do |_case|
+                expect(case_store).to have_received(:save).with(_case)
+              end
+            end
+          end
+
+          context 'cases exist and noclobber is true' do
+            Given(:first_case) { list.cases.first }
+            before do
+              expect(case_store).to receive(:exists?).with(
+                first_case_hash['original_url']).and_return(true)
+            end
+
+            it 'does not replace cases that already exist' do
+              list.save_to(case_store, noclobber: true)
+
+              expect(case_store).not_to have_received(:save).with(first_case)
             end
           end
         end

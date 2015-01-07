@@ -14,8 +14,11 @@ module CMA
         missing_competition_case_2011? ? [@cases, that_case].flatten : @cases
       end
 
-      def save_to(case_store)
-        cases.each { |c| case_store.save(c) }
+      def save_to(case_store, options = { noclobber: false })
+        cases.each do |c|
+          would_clobber = options[:noclobber] && case_store.exists?(c.original_url)
+          case_store.save(c) unless would_clobber
+        end
       end
 
     private
