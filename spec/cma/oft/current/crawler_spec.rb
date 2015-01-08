@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'cma/oft/crawler'
+require 'cma/oft/current/crawler'
 
-module CMA::OFT
+module CMA::OFT::Current
   describe Crawler do
     describe 'a case list' do
       it 'matches the daft interstitial page when no query string' do

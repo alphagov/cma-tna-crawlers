@@ -2,6 +2,6 @@
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-require 'cma/oft/mergers_crawler'
+require 'cma/oft/mergers/crawler'
 
-CMA::OFT::MergersCrawler.new.crawl!
+CMA::OFT::Mergers::Crawler.new.crawl!

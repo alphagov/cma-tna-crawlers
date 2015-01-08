@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'cma/oft/case'
+require 'cma/oft/current/case'
 require 'nokogiri'
 
-module CMA::OFT
+module CMA::OFT::Current
   describe Case do
     When(:_case) { Case.create('http://example.com/1', 'title') }
 

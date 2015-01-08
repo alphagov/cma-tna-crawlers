@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'cma/case_store'
 require 'cma/cc/case'
-require 'cma/oft/case'
+require 'cma/oft/current/case'
 
 module CMA
   describe CaseStore do
@@ -99,6 +99,41 @@ module CMA
       end
     end
 
+    describe 'what to load via .load_class' do
+      let(:case_store) { CaseStore.new('spec/fixtures/store') }
+
+      it 'loads a Mergers case for a merger URL' do
+        expect(case_store.class_to_load(
+          'http://example.com/OFTwork/mergers/Mergers_Cases/2013/Alliance.json')
+        ).to eql(CMA::OFT::Mergers::Case)
+      end
+      it 'loads a Competition case for a competition URL' do
+        expect(case_store.class_to_load(
+          'http://example.com/OFTwork/oft-current-cases/competition-case-list-2005/interchage-fees-mastercard.json')
+        ).to eql(CMA::OFT::Competition::Case)
+      end
+      it 'loads a Consumer case for a consumer URL' do
+        expect(case_store.class_to_load(
+          'http://example.com/OFTwork/oft-current-cases/consumer-case-list-2012/furniture-carpets.json')
+        ).to eql(CMA::OFT::Consumer::Case)
+      end
+      it 'loads a Markets case for a markets URL' do
+        expect(case_store.class_to_load(
+          'http://example.com/OFTwork/oft-current-cases/markets-work-2013/higher-education-cfi.json')
+        ).to eql(CMA::OFT::Markets::Case)
+      end
+      it 'loads a Markets case for a markets URL' do
+        expect(case_store.class_to_load(
+          'http://example.com/OFTwork/oft-current-cases/market-studies-2012/personal-current-accounts.json')
+        ).to eql(CMA::OFT::Markets::Case)
+      end
+      it 'loads a CC case for a CC URL' do
+        expect(case_store.class_to_load(
+          'http://example.com/our-work/directory-of-all-inquiries/aggregates-cement-ready-mix-concrete.json')
+        ).to eql(CMA::CC::Case)
+      end
+    end
+
     describe '`.find`ing a case we just saved by URL' do
       let(:case_store) { CaseStore.new('spec/fixtures/store') }
 
@@ -131,14 +166,14 @@ module CMA
         end
       end
 
-      context 'the case is an OFT case' do
-        let(:klass) { OFT::Case }
+      context 'the case is an OFT "current cases" closed case' do
+        let(:klass) { OFT::Current::Case }
         let(:original_url) do
           'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2011/access-control-alarm-systems'
         end
 
         it 'hydrates the right class' do
-          expect(_case).to be_an(OFT::Case)
+          expect(_case).to be_an(OFT::Current::Case)
         end
 
         describe 'the case' do
