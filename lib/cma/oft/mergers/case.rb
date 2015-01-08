@@ -24,7 +24,8 @@ module CMA
           raise ArgumentError,
                 "#{original_url} is not a new-style case" unless new_style?
 
-          self.summary = doc.at_css('.body-copy h1').text.strip
+          self.summary = 'OFT closed case: ' +
+            doc.at_css('.body-copy h1').text.strip
         end
       end
     end

@@ -47,6 +47,7 @@ module CMA::OFT::Mergers
 
         it 'sets the summary to the title of the page' do
           expect(_case.summary).to eql(
+           'OFT closed case: '\
            'Anticipated acquisition by ABN Amro Clearing Bank N.V., OMX A.B., '\
            'BATS Trading Limited and the Depository Trust & Clearing '\
            'Corporation of European Multilateral Clearing Facility N.V., '\
