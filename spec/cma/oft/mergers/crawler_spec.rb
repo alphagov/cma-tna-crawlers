@@ -32,6 +32,48 @@ module CMA::OFT::Mergers
           expect(Crawler::CASE).to match(abellio)
         end
       end
+
+      context '2010 decisions that are not new-style case subpages'\
+              '(rather just late decisions on 2009 cases)' do
+        shared_examples 'it is not a case, it is a subpage' do
+          it 'is not a case' do
+            expect(Crawler::CASE).not_to match(path)
+          end
+          it 'is a subpage' do
+            expect(Crawler::SUBPAGE).to match(path)
+          end
+        end
+
+        context 'lse' do
+          let(:path) { '/OFTwork/mergers/decisions/2010/london-stock-exchange' }
+
+          it_behaves_like 'it is not a case, it is a subpage'
+        end
+
+        context 'gne' do
+          let(:path) { '/OFTwork/mergers/decisions/2010/go-north-east' }
+
+          it_behaves_like 'it is not a case, it is a subpage'
+        end
+
+        context 'Aggregate' do
+          let(:path) { '/OFTwork/mergers/decisions/2010/Aggregate' }
+
+          it_behaves_like 'it is not a case, it is a subpage'
+        end
+
+        context 'Arriva' do
+          let(:path) { '/OFTwork/mergers/decisions/2010/arriva' }
+
+          it_behaves_like 'it is not a case, it is a subpage'
+        end
+
+        context 'Koppers' do
+          let(:path) { '/OFTwork/mergers/decisions/2010/Koppers' }
+
+          it_behaves_like 'it is not a case, it is a subpage'
+        end
+      end
     end
   end
 end

@@ -21,17 +21,33 @@ module CMA
           /?$
         }x
 
+        SUBPAGE_NOT_CASE = %r{
+          (london-stock-exchange|go-north-east|Aggregate|Koppers|arriva|
+           co-op-psw|ambassador|co-operative1|phs-teacrate)
+        }x
+
         CASE      = %r{
           OFTwork/mergers/
           (?:
-            (decisions/201[0-9])|     # 2010-14 cases pages are only at /decisions
+            ( # 2010-14 cases pages are only at /decisions
+
+              decisions/201[0-9]
+
+              # ... but there are exceptions; decisions that came later on an
+              # "old-style" case.
+              # List them here.
+
+              (?!/#{SUBPAGE_NOT_CASE})
+            )|
             (Mergers_Cases/200[0-9])  # 2002-09 cases pages are at /Mergers_Cases
           )
           /[a-z|A-Z|0-9|_|-]+/?$
         }x
 
         SUBPAGE = %r{
-          OFTwork/mergers/(?<subpage>decisions/200[0-9]/[a-z|A-Z|0-9|_|-]+/?$)
+          OFTwork/mergers/
+          (decisions/200[0-9]/[a-z|A-Z|0-9|_|-]+/?$)|
+          (decisions/2010/#{SUBPAGE_NOT_CASE})
         }x
 
         ASSET     = %r{(?<!Brie1)\.pdf$} # Delicious Brie1 actually a briefing note
@@ -49,7 +65,7 @@ module CMA
           when CASE
             puts ' Case: TODO'
             with_case(original_url) do |_case|
-              _case.add_summary if _case.old_style?
+              _case.add_summary(page.doc) if _case.new_style?
             end
           when SUBPAGE
             puts ' Subpage: TODO'
@@ -75,11 +91,6 @@ module CMA
 
         def merger_entry_points
           %w(
-            OFTwork/mergers/decisions/2014/
-            OFTwork/mergers/decisions/2013/
-            OFTwork/mergers/decisions/2012/
-            OFTwork/mergers/decisions/2011/
-            OFTwork/mergers/decisions/2010/
             OFTwork/mergers/Mergers_Cases/2009/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2008/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2007/?Order=Date&currentLetter=A
@@ -87,6 +98,11 @@ module CMA
             OFTwork/mergers/Mergers_Cases/2005/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2004/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2003/?Order=Date&currentLetter=A
+            OFTwork/mergers/decisions/2014/
+            OFTwork/mergers/decisions/2013/
+            OFTwork/mergers/decisions/2012/
+            OFTwork/mergers/decisions/2011/
+            OFTwork/mergers/decisions/2010/
           ).map {|path| TNA_BASE + OFT_BASE + path}
         end
 
