@@ -56,5 +56,30 @@ module CMA::OFT::Mergers
         end
       end
     end
+
+    describe '#add_subpage' do
+      Given(:_case) { Case.create('http://example.com/1', 'title') }
+
+      When { _case.add_subpage(doc) }
+
+      context 'LSE subpage' do
+        let(:doc) do
+          Nokogiri::HTML(File.read('spec/fixtures/oft/decisions-2010-lse.html'))
+        end
+
+        Then { expect(_case.original_urls).to include(
+          'http://www.oft.gov.uk/OFTwork/mergers/decisions/2010/london-stock-exchange')
+        }
+
+        describe 'the markdown section' do
+          subject(:section) do
+            _case.markup_sections['decisions/2010/london-stock-exchange']
+          end
+
+          it { should include('Anticipated acquisition by London Stock Exchange Group Plc') }
+          it { should_not include('<div') }
+        end
+      end
+    end
   end
 end

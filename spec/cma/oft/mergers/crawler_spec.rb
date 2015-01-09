@@ -23,8 +23,8 @@ module CMA::OFT::Mergers
 
       context '2010-2014' do
         it 'matches case list for year' do
-          expect(Crawler::CASE_LIST).to match(
-            'http://www.oft.gov.uk/OFTwork/mergers/decisions/2012/')
+          expect(Crawler::CASE_LIST).to match('/OFTwork/mergers/decisions/2012/')
+          expect(Crawler::CASE_LIST).to match('/OFTwork/mergers/decisions/2012')
         end
         it 'matches cases' do
           abellio = '/OFTwork/mergers/decisions/2012/abellio'
@@ -52,12 +52,6 @@ module CMA::OFT::Mergers
 
         context 'gne' do
           let(:path) { '/OFTwork/mergers/decisions/2010/go-north-east' }
-
-          it_behaves_like 'it is not a case, it is a subpage'
-        end
-
-        context 'Aggregate' do
-          let(:path) { '/OFTwork/mergers/decisions/2010/Aggregate' }
 
           it_behaves_like 'it is not a case, it is a subpage'
         end

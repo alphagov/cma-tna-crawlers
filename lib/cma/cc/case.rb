@@ -33,12 +33,6 @@ module CMA
         add_markdown_detail(doc, 'core_documents')
       end
 
-      # body types that will need body generation/ordering later
-      attr_writer :markup_sections
-      def markup_sections
-        @markup_sections ||= {}
-      end
-
       def add_markdown_detail(doc, markup_sections_path)
         doc.dup.at_css('#mainColumn').tap do |markup|
           # Simple stuff

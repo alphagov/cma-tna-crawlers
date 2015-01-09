@@ -21,6 +21,10 @@ module CMA
           /?$
         }x
 
+        ##
+        # Nine subpages for cases that started 2009, but which appear
+        # at new-style URLs (so would be incorrectly matched as 2010 cases
+        # if left alone)
         SUBPAGE_NOT_CASE = %r{
           (london-stock-exchange|go-north-east|Aggregate|Koppers|arriva|
            co-op-psw|ambassador|co-operative1|phs-teacrate)
@@ -52,7 +56,7 @@ module CMA
 
         ASSET     = %r{(?<!Brie1)\.pdf$} # Delicious Brie1 actually a briefing note
 
-        FOLLOW_ONLY = [CASE, ASSET]
+        FOLLOW_ONLY = [CASE, SUBPAGE, ASSET]
         IGNORE_EXPLICITLY = []
 
         def create_or_update_content_for(page)
@@ -63,27 +67,49 @@ module CMA
             puts ' Case list'
             CMA::OFT::YearCaseList.new(page.doc).save_to(case_store)
           when CASE
-            puts ' Case: TODO'
+            puts ' Case'
             with_case(original_url) do |_case|
               _case.add_summary(page.doc) if _case.new_style?
             end
           when SUBPAGE
-            puts ' Subpage: TODO'
+            if decision_from_2009_case?(original_url, page)
+              puts "\nSKIPPING: #{original_url}"
+              return
+            end
+
+            puts ' Subpage'
+            begin
+              with_nearest_case_matching(page.referer, CASE) do |_case|
+                _case.add_subpage(page.doc)
+              end
+            rescue Errno::ENOENT
+              puts "\nWARNING: no case for SUBPAGE #{original_url}\n"
+              dump_referer_chain(page, 1)
+              puts
+            end
           when ASSET
             puts ' ASSET'
-            with_nearest_case_matching(page.referer, CASE) do |_case|
-              asset = CMA::Asset.new(original_url, _case, page.body, page.headers['content-type'].first)
-              asset.save!(case_store.location)
-              _case.assets << asset
+            begin
+              with_nearest_case_matching(page.referer, CASE) do |_case|
+                asset = CMA::Asset.new(original_url, _case, page.body, page.headers['content-type'].first)
+                asset.save!(case_store.location)
+                _case.assets << asset
+              end
+            rescue Errno::ENOENT
+              puts "WARNING: no case for ASSET #{original_url}"
             end
           end
+        end
+
+        def decision_from_2009_case?(original_url, page)
+          original_url =~ SUBPAGE_NOT_CASE &&
+            page.referer.to_s =~ %r{mergers/decisions/2010/?$}
         end
 
         def crawl!
           merger_entry_points.each do |start_url|
             do_crawl(start_url,
-                     newline_after_url: false,
-                     print_referer: true) do |crawl|
+                     newline_after_url: false) do |crawl|
               focus_on_interesting_body_copy_links(crawl)
             end
           end
@@ -91,6 +117,11 @@ module CMA
 
         def merger_entry_points
           %w(
+            OFTwork/mergers/decisions/2010/
+            OFTwork/mergers/decisions/2014/
+            OFTwork/mergers/decisions/2013/
+            OFTwork/mergers/decisions/2012/
+            OFTwork/mergers/decisions/2011/
             OFTwork/mergers/Mergers_Cases/2009/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2008/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2007/?Order=Date&currentLetter=A
@@ -98,11 +129,6 @@ module CMA
             OFTwork/mergers/Mergers_Cases/2005/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2004/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2003/?Order=Date&currentLetter=A
-            OFTwork/mergers/decisions/2014/
-            OFTwork/mergers/decisions/2013/
-            OFTwork/mergers/decisions/2012/
-            OFTwork/mergers/decisions/2011/
-            OFTwork/mergers/decisions/2010/
           ).map {|path| TNA_BASE + OFT_BASE + path}
         end
 
@@ -127,7 +153,7 @@ module CMA
 
         def should_follow?(href)
           FOLLOW_ONLY.any? { |pattern| pattern =~ href } &&
-            IGNORE_EXPLICITLY.none? { |pattern| pattern == href }
+            IGNORE_EXPLICITLY.none? { |pattern| pattern =~ href }
         end
 
         def link_nodes_for(page)

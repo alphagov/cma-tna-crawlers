@@ -7,6 +7,12 @@ module CMA
 
     attr_accessor :title, :original_url, :summary, :body
 
+    # body types that will need body generation/ordering later
+    attr_writer :markup_sections
+    def markup_sections
+      @markup_sections ||= {}
+    end
+
     def assets
       @assets ||= Set.new
     end

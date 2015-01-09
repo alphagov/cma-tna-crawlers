@@ -22,8 +22,8 @@ module CMA
             begin
               create_or_update_content_for(page)
             rescue => e
-              sleep(1)
               dump_referer_chain(page)
+              sleep(0.2)
               raise e
             end
           end
@@ -52,7 +52,7 @@ module CMA
 
       def with_nearest_case_matching(url, regex, from = nil, &block)
         page = find_nearest_page_matching(url, regex)
-        raise Errno::ENOENT, "No page matching #{regex} available for #{url}" if page.nil?
+        raise Errno::ENOENT, "No matching page found for #{url}" if page.nil?
         with_case(Link.new(page.url).original_url, from, &block)
       end
 
