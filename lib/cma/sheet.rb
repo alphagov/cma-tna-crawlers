@@ -41,9 +41,9 @@ module CMA
           Date.strptime(date_str, DATE_FORMAT) unless date_str.nil?
       end
 
-      def decision_date
+      def closed_date
         @_decision_date ||=
-          Date.strptime(@row['Decision date'], DATE_FORMAT)
+          Date.strptime(@row['Closed date'], DATE_FORMAT)
       end
 
       def link

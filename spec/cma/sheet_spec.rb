@@ -16,7 +16,7 @@ describe CMA::Sheet do
 
       Then { row.market_sector == 'Recreation and Leisure' }
       Then { row.open_date     == Date.new(2013, 6, 1) }
-      Then { row.decision_date == Date.new(2014, 1, 1) }
+      Then { row.closed_date == Date.new(2014, 1, 1) }
       Then { row.outcome       == 'consumer-enforcement-undertakings' }
 
       Then {
@@ -34,21 +34,21 @@ describe CMA::Sheet do
   context 'markets work' do
     Given(:filename) { 'sheets/markets-work.csv' }
 
-    Then { sheet.rows.size == 14 }
+    Then { sheet.rows.size == 10 }
 
     describe 'the first row' do
       Given(:row) { sheet.rows[0] }
 
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-      Then { row.market_sector == 'Building and construction' }
-      Then { row.open_date     == Date.new(2011, 8, 1) }
-      Then { row.decision_date == Date.new(2021, 1, 18) }
+      Then { row.market_sector == 'Transport' }
+      Then { row.open_date     == Date.new(2006, 12, 1) }
+      Then { row.closed_date == Date.new(2007, 3, 30) }
       Then { row.outcome       == 'markets-phase-1-referral' }
 
       Then {
         row.link.original_url ==
-          'http://www.oft.gov.uk/OFTwork/markets-work/references/aggregates-MIR'
+          'http://www.oft.gov.uk/OFTwork/markets-work/references/airports'
       }
 
       it 'parses all dates' do
