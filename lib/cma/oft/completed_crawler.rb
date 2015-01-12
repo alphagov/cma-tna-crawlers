@@ -10,17 +10,8 @@ module CMA
       CONSUMER_ENFORCEMENT_COMPLETED = OFT_BASE + 'OFTwork/consumer-enforcement/consumer-enforcement-completed/'
       MARKETS_COMPLETED              = OFT_BASE + 'OFTwork/markets-work/completed/'
 
-      def index
-        @_index = CMA::CaseStore::Index.new(CMA::CaseStore::DEFAULT_LOCATION)
-      end
-
       def create_or_update_content_for(page)
         original_url = CMA::Link.new(page.url).original_url
-
-        if index[original_url]
-          puts "SKIPPING: #{original_url}"
-          return
-        end
 
         case original_url
         when CONSUMER_ENFORCEMENT_COMPLETED, MARKETS_COMPLETED
