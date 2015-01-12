@@ -36,7 +36,7 @@ module CMA
           JSON.parse(File.read(json_filename)).tap do |json_hash|
             next unless original_urls = json_hash['original_urls']
             original_urls.each do |original_url|
-              index_hash[original_url] = json_filename
+              index_hash[original_url] = File.basename(json_filename)
             end
           end
           index_hash

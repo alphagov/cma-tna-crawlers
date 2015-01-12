@@ -31,19 +31,19 @@ describe CMA::CaseStore::Index do
 
       context 'case with original URL exists' do
         it 'returns the case' do
-          expect(index['http://original.url/']).to eql(File.join(location, 'indexable_case.json'))
+          expect(index['http://original.url/']).to eql('indexable_case.json')
         end
       end
 
       context 'case with another url in original_urls exists' do
         it 'returns the case' do
-          expect(index['http://some.other.original.url/']).to eql(File.join(location, 'indexable_case.json'))
+          expect(index['http://some.other.original.url/']).to eql('indexable_case.json')
         end
       end
 
       context 'case exists with non-www oft version, but we look up by www' do
         it 'returns the case' do
-          expect(index['http://www.oft.gov.uk/1']).to eql(File.join(location, 'indexable_case.json'))
+          expect(index['http://www.oft.gov.uk/1']).to eql('indexable_case.json')
         end
 
         describe '#www' do
