@@ -16,7 +16,8 @@ module CMA
         'Undertakings'               => 'consumer-enforcement-undertakings',
         'Court order'                => 'consumer-enforcement-court-order',
         'No action'                  => 'consumer-enforcement-no-action',
-        'markets - phase 1 referral' => 'markets-phase-1-referral'
+        'markets - phase 1 referral' => 'markets-phase-1-referral',
+        '?' => 'UNKNOWN'
       }
 
       def initialize(row)
@@ -31,11 +32,11 @@ module CMA
         @row['Ref']
       end
 
-      def outcome
+      def outcome_type
         OUTCOME_MAPPINGS.fetch(@row['Outcome'])
       end
 
-      def open_date
+      def opened_date
         date_str = @row['Open date']
         @_open_date ||=
           Date.strptime(date_str, DATE_FORMAT) unless date_str.nil?

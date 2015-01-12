@@ -15,9 +15,9 @@ describe CMA::Sheet do
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
       Then { row.market_sector == 'Recreation and Leisure' }
-      Then { row.open_date     == Date.new(2013, 6, 1) }
+      Then { row.opened_date     == Date.new(2013, 6, 1) }
       Then { row.closed_date == Date.new(2014, 1, 1) }
-      Then { row.outcome       == 'consumer-enforcement-undertakings' }
+      Then { row.outcome_type       == 'consumer-enforcement-undertakings' }
 
       Then {
         row.link.original_url ==
@@ -25,8 +25,8 @@ describe CMA::Sheet do
           '/OFTwork/consumer-enforcement/consumer-enforcement-completed/air-travel/'
       }
 
-      it 'parses all outcomes' do
-        sheet.rows.each {|row| expect(row.outcome).to be_a(String)}
+      it 'parses all outcome_types' do
+        sheet.rows.each {|row| expect(row.outcome_type).to be_a(String)}
       end
     end
   end
@@ -42,9 +42,9 @@ describe CMA::Sheet do
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
       Then { row.market_sector == 'Transport' }
-      Then { row.open_date     == Date.new(2006, 12, 1) }
+      Then { row.opened_date     == Date.new(2006, 12, 1) }
       Then { row.closed_date == Date.new(2007, 3, 30) }
-      Then { row.outcome       == 'markets-phase-1-referral' }
+      Then { row.outcome_type       == 'markets-phase-1-referral' }
 
       Then {
         row.link.original_url ==
@@ -53,7 +53,7 @@ describe CMA::Sheet do
 
       it 'parses all dates' do
         sheet.rows.each do |row|
-          expect(row.open_date).to satisfy {|date| date.nil? || date.is_a?(Date)}
+          expect(row.opened_date).to satisfy {|date| date.nil? || date.is_a?(Date)}
         end
       end
     end
