@@ -4,7 +4,9 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'cma/case_store/augment_from_sheet'
 
-CMA::CaseStore::AugmentFromSheet.new(
-  CMA::CaseStore.new,
-  CMA::Sheet.new('sheets/consumer-enforcement.csv')
-).run!
+case_store = CMA::CaseStore.new
+
+CMA::Sheet.all.each do |sheet|
+  puts "Augmenting with #{sheet.filename}"
+  CMA::CaseStore::AugmentFromSheet.new(case_store, sheet).run!
+end

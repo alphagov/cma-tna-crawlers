@@ -59,5 +59,15 @@ module CMA
         end
       end
     end
+
+    def Sheet.all
+      @_all_sheets = begin
+        Dir['sheets/*.csv'].map do |filename|
+          Sheet.new(filename)
+        end
+      end.tap do |sheets|
+        raise Errno::ENOENT, "No sheets found at #{Dir.pwd}" unless sheets.size > 0
+      end
+    end
   end
 end
