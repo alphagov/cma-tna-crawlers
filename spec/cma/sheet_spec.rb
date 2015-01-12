@@ -15,9 +15,9 @@ describe CMA::Sheet do
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
       Then { row.market_sector == 'Recreation and Leisure' }
-      Then { row.opened_date     == Date.new(2013, 6, 1) }
-      Then { row.closed_date == Date.new(2014, 1, 1) }
-      Then { row.outcome_type       == 'consumer-enforcement-undertakings' }
+      Then { row.opened_date   == Date.new(2013, 6, 1) }
+      Then { row.closed_date   == Date.new(2014, 1, 1) }
+      Then { row.outcome_type  == 'consumer-enforcement-undertakings' }
 
       Then {
         row.link.original_url ==
@@ -42,9 +42,9 @@ describe CMA::Sheet do
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
       Then { row.market_sector == 'Transport' }
-      Then { row.opened_date     == Date.new(2006, 12, 1) }
-      Then { row.closed_date == Date.new(2007, 3, 30) }
-      Then { row.outcome_type       == 'markets-phase-1-referral' }
+      Then { row.opened_date   == Date.new(2006, 12, 1) }
+      Then { row.closed_date   == Date.new(2007, 3, 30) }
+      Then { row.outcome_type  == 'markets-phase-1-referral' }
 
       Then {
         row.link.original_url ==
