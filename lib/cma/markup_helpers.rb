@@ -9,14 +9,6 @@ module CMA
         a['href'] = link.original_url
       end
     end
-
-    def at_first_xpath(*xpaths)
-      result = nil
-      xpaths.find do |xpath|
-        result = at_xpath(xpath)
-      end
-      result
-    end
   end
 end
 
