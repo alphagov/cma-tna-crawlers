@@ -14,12 +14,12 @@ describe CMA::Sheet do
 
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-      Then { row.market_sector == 'Recreation and Leisure' }
-      Then { row.opened_date   == Date.new(2013, 6, 1) }
-      Then { row.closed_date   == Date.new(2014, 1, 1) }
-      Then { row.outcome_type  == 'consumer-enforcement-undertakings' }
+      And  { row.market_sector == 'Recreation and Leisure' }
+      And  { row.opened_date   == Date.new(2013, 6, 1) }
+      And  { row.closed_date   == Date.new(2014, 1, 1) }
+      And  { row.outcome_type  == 'consumer-enforcement-undertakings' }
 
-      Then {
+      And  {
         row.link.original_url ==
           'http://www.oft.gov.uk'\
           '/OFTwork/consumer-enforcement/consumer-enforcement-completed/air-travel/'
@@ -41,12 +41,12 @@ describe CMA::Sheet do
 
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-      Then { row.market_sector == 'Transport' }
-      Then { row.opened_date   == Date.new(2006, 12, 1) }
-      Then { row.closed_date   == Date.new(2007, 3, 30) }
-      Then { row.outcome_type  == 'markets-phase-1-referral' }
+      And  { row.market_sector == 'Transport' }
+      And  { row.opened_date   == Date.new(2006, 12, 1) }
+      And  { row.closed_date   == Date.new(2007, 3, 30) }
+      And  { row.outcome_type  == 'markets-phase-1-referral' }
 
-      Then {
+      And  {
         row.link.original_url ==
           'http://www.oft.gov.uk/OFTwork/markets-work/references/airports'
       }
