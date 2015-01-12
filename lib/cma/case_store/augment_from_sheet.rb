@@ -28,6 +28,7 @@ module CMA
           if filename && case_store.file_exists?(filename)
             case_store.load(filename).tap do |_case|
               _case.opened_date   = row.opened_date
+              _case.closed_date   = row.closed_date
               _case.market_sector = schema.market_sector[row.market_sector]
               _case.outcome_type  = row.outcome_type
               case_store.save(_case)

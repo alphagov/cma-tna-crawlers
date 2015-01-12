@@ -34,6 +34,7 @@ describe CMA::CaseStore::AugmentFromSheet do
       Then { loaded_case.outcome_type  == 'consumer-enforcement-undertakings' }
       Then { loaded_case.market_sector == 'healthcare-and-medical-equipment' }
       Then { loaded_case.opened_date   == '2012-02-01' }
+      Then { loaded_case.closed_date   == '2012-02-01' }
     end
   end
 
