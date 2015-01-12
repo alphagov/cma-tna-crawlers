@@ -75,12 +75,15 @@ module CMA
       end
     end
 
-    describe '#exists?' do
+    describe '#exists? / #file_exists?' do
       let(:case_store) { CaseStore.new('spec/fixtures/store') }
 
       context 'the case does not exist' do
-        it 'returns false' do
+        specify 'exists? returns false' do
           expect(case_store.exists?('http://no.chance/etc/etc')).to eql(false)
+        end
+        specify 'file_exists? returns false' do
+          expect(case_store.exists?('etc-etc')).to eql(false)
         end
       end
       context 'the case exists' do
@@ -93,8 +96,13 @@ module CMA
           case_store.save(case_to_save)
         end
 
-        it 'returns true' do
+        specify 'exists? returns true' do
           expect(case_store.exists?(original_url)).to eql(true)
+        end
+        specify 'file_exists? returns true' do
+          expect(case_store.file_exists?(
+            'OFTwork-oft-current-cases-competition-case-list-2011-access-control-alarm-systems.json'
+          )).to eql(true)
         end
       end
     end
