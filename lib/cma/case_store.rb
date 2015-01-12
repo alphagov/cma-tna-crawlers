@@ -33,6 +33,11 @@ module CMA
       )
     end
 
+    def load(filename)
+      class_to_load(filename).new.from_json File.read(
+                                              File.join(location, filename))
+    end
+
     def find(original_url)
       class_to_load(original_url).new.from_json File.read(full_filename(original_url))
     end
@@ -41,21 +46,21 @@ module CMA
       File.exists?(full_filename(original_url))
     end
 
-    MERGER_CASE      = %r{OFTwork/mergers}
-    COMPETITION_CASE = %r{OFTwork/oft-current-cases/competition}
-    CONSUMER_CASE    = %r{OFTwork/oft-current-cases/consumer}
-    MARKETS_CASE     = %r{OFTwork/oft-current-cases/markets?-(work|studies)}
-    CC_CASE          = %r{our-work/directory-of-all-inquiries/[A-Za-z0-9-]*}
+    MERGER_CASE      = %r{OFTwork[/-]mergers}
+    COMPETITION_CASE = %r{OFTwork[/-]oft-current-cases[/-]competition}
+    CONSUMER_CASE    = %r{OFTwork[/-](oft-current-cases[/-])?consumer}
+    MARKETS_CASE     = %r{OFTwork[/-]oft-current-cases[/-]markets?-(work|studies)}
+    CC_CASE          = %r{our-work[/-]directory-of-all-inquiries[/-][A-Za-z0-9-]*}
 
-    def class_to_load(original_url)
-      case original_url
+    def class_to_load(original_url_or_filename)
+      case original_url_or_filename
       when CONSUMER_CASE    then OFT::Consumer::Case
       when MARKETS_CASE     then OFT::Markets::Case
       when COMPETITION_CASE then OFT::Competition::Case
       when MERGER_CASE      then OFT::Mergers::Case
       when CC_CASE          then CC::Case
       else
-        raise ArgumentError, "class_to_load for #{original_url} not found"
+        raise ArgumentError, "class_to_load for #{original_url_or_filename} not found"
       end
     end
 

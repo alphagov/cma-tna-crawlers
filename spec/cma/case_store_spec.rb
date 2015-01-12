@@ -107,14 +107,29 @@ module CMA
           'http://example.com/OFTwork/mergers/Mergers_Cases/2013/Alliance.json')
         ).to eql(CMA::OFT::Mergers::Case)
       end
+      it 'loads a Mergers case for a merger filename' do
+        expect(case_store.class_to_load(
+          'OFTwork-mergers-Mergers_Cases-2013-Alliance.json')
+        ).to eql(CMA::OFT::Mergers::Case)
+      end
       it 'loads a Competition case for a competition URL' do
         expect(case_store.class_to_load(
           'http://example.com/OFTwork/oft-current-cases/competition-case-list-2005/interchage-fees-mastercard.json')
         ).to eql(CMA::OFT::Competition::Case)
       end
+      it 'loads a Competition case for a competition filename' do
+        expect(case_store.class_to_load(
+          'OFTwork-oft-current-cases-competition-case-list-2005-interchage-fees-mastercard.json')
+        ).to eql(CMA::OFT::Competition::Case)
+      end
       it 'loads a Consumer case for a consumer URL' do
         expect(case_store.class_to_load(
           'http://example.com/OFTwork/oft-current-cases/consumer-case-list-2012/furniture-carpets.json')
+        ).to eql(CMA::OFT::Consumer::Case)
+      end
+      it 'loads a Consumer case for a consumer filename' do
+        expect(case_store.class_to_load(
+          'OFTwork-oft-current-cases-consumer-case-list-2012-furniture-carpets.json')
         ).to eql(CMA::OFT::Consumer::Case)
       end
       it 'loads a Markets case for a markets URL' do
@@ -127,14 +142,24 @@ module CMA
           'http://example.com/OFTwork/oft-current-cases/market-studies-2012/personal-current-accounts.json')
         ).to eql(CMA::OFT::Markets::Case)
       end
+      it 'loads a Markets case for a markets URL' do
+        expect(case_store.class_to_load(
+          'OFTwork-oft-current-cases-market-studies-2012-personal-current-accounts.json')
+        ).to eql(CMA::OFT::Markets::Case)
+      end
       it 'loads a CC case for a CC URL' do
         expect(case_store.class_to_load(
           'http://example.com/our-work/directory-of-all-inquiries/aggregates-cement-ready-mix-concrete.json')
         ).to eql(CMA::CC::Case)
       end
+      it 'loads a CC case for a CC filename' do
+        expect(case_store.class_to_load(
+          'our-work-directory-of-all-inquiries-aggregates-cement-ready-mix-concrete.json')
+        ).to eql(CMA::CC::Case)
+      end
     end
 
-    describe '`.find`ing a case we just saved by URL' do
+    describe 'retrieving a case we just saved by URL' do
       let(:case_store) { CaseStore.new('spec/fixtures/store') }
 
       before { case_store.save(case_to_save) }
@@ -147,33 +172,52 @@ module CMA
         end
       end
 
-      subject(:_case) { case_store.find(original_url) }
+      describe '#find' do
+        subject(:_case) { case_store.find(original_url) }
 
-      context 'the case is a CC case' do
+        context 'the case is a CC case' do
+          let(:klass) { CC::Case }
+          let(:original_url) do
+            'http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/arcelor-sa-corus-uk-limited'
+          end
+
+          it 'hydrates the right class' do
+            expect(_case).to be_a(CC::Case)
+          end
+
+          describe 'the case' do
+            example { expect(_case.title).to eql(title) }
+            example { expect(_case.original_url).to eql(original_url) }
+            example { expect(_case.original_urls.size).to eql(2) }
+          end
+        end
+
+        context 'the case is an OFT "current cases" closed case' do
+          let(:klass) { OFT::Current::Case }
+          let(:original_url) do
+            'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2011/access-control-alarm-systems'
+          end
+
+          it 'hydrates the right class' do
+            expect(_case).to be_an(OFT::Current::Case)
+          end
+
+          describe 'the case' do
+            example { expect(_case.title).to eql(title) }
+            example { expect(_case.original_url).to eql(original_url) }
+            example { expect(_case.original_urls.size).to eql(2) }
+          end
+        end
+      end
+
+      describe '#load' do
         let(:klass) { CC::Case }
         let(:original_url) do
           'http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/arcelor-sa-corus-uk-limited'
         end
 
-        it 'hydrates the right class' do
-          expect(_case).to be_a(CC::Case)
-        end
-
-        describe 'the case' do
-          example { expect(_case.title).to eql(title) }
-          example { expect(_case.original_url).to eql(original_url) }
-          example { expect(_case.original_urls.size).to eql(2) }
-        end
-      end
-
-      context 'the case is an OFT "current cases" closed case' do
-        let(:klass) { OFT::Current::Case }
-        let(:original_url) do
-          'http://www.oft.gov.uk/OFTwork/oft-current-cases/competition-case-list-2011/access-control-alarm-systems'
-        end
-
-        it 'hydrates the right class' do
-          expect(_case).to be_an(OFT::Current::Case)
+        subject(:_case) do
+          case_store.load('our-work-directory-of-all-inquiries-arcelor-sa-corus-uk-limited.json')
         end
 
         describe 'the case' do
