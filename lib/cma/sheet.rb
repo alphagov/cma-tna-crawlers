@@ -31,6 +31,8 @@ module CMA
         'Court order'                => 'consumer-enforcement-court-order',
         'No action'                  => 'consumer-enforcement-no-action',
         'markets - phase 1 referral' => 'markets-phase-1-referral',
+        'Regulatory appeals and references - final determination' =>
+          'regulatory-references-and-appeals-final-determination',
         '?' => 'UNKNOWN'
       }
 
@@ -44,6 +46,10 @@ module CMA
 
       def ref
         @row['Ref']
+      end
+
+      def raw
+        @row
       end
 
       def outcome_type
