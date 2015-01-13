@@ -28,5 +28,10 @@ describe CMA::Schema do
         schema.market_sector['healthcare AND mEdical equiPMent']
       ).to eql('healthcare-and-medical-equipment')
     end
+    it 'deals with leading and trailing space' do
+      expect(
+        schema.market_sector['  healthcare AND mEdical equiPMent  ']
+      ).to eql('healthcare-and-medical-equipment')
+    end
   end
 end

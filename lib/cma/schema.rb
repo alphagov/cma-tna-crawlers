@@ -4,7 +4,7 @@ module CMA
   class Schema
     class InsensitiveAccessHash < Hash
       def [](key)
-        key.respond_to?(:downcase) ? super(key.downcase) : super(key)
+        key.respond_to?(:downcase) ? super(key.strip.downcase) : super(key)
       end
     end
 
