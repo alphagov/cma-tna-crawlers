@@ -20,6 +20,10 @@ module CMA
         output_hash
       end
     end
+
+    def self.instance
+      @@instance ||= CMA::Schema.new
+    end
   private
     def json_hash
       @_json_hash ||= JSON.parse(File.read('schema/cma-cases.json'))

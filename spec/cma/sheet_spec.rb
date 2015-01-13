@@ -59,7 +59,7 @@ describe CMA::Sheet do
     end
   end
 
-  context 'CC', pending: true do
+  context 'CC' do
     Given(:filename) { 'sheets/cc.csv' }
 
     Then { sheet.rows.size == 135 }
@@ -72,11 +72,13 @@ describe CMA::Sheet do
       And  { row.market_sector == 'Pharmaceuticals' }
       And  { row.opened_date   == Date.new(2003, 12, 3) }
       And  { row.closed_date   == Date.new(2003, 12, 23) }
-      And  { row.outcome_type  == 'markets-phase-1-referral' }
+      And  { row.outcome_type  == 'mergers-phase-1-referral' }
 
       And  {
         row.link.original_url ==
-          'http://www.oft.gov.uk/OFTwork/markets-work/references/airports'
+          'http://www.competition-commission.org.uk/our-work/'\
+          'directory-of-all-inquiries/'\
+          'aah-pharmaceuticals-limited-east-anglian-pharmaceuticals-limited'
       }
 
       it 'parses all dates' do

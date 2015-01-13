@@ -1,5 +1,6 @@
 require 'csv'
 require 'cma/link'
+require 'cma/schema'
 
 module Enumerable
   ##
@@ -46,7 +47,9 @@ module CMA
       end
 
       def outcome_type
-        OUTCOME_MAPPINGS.fetch(@row['Outcome'])
+        outcome_title = @row['Outcome'] || @row['Outcome type']
+        OUTCOME_MAPPINGS[outcome_title] ||
+          CMA::Schema.instance.outcome_types[outcome_title]
       end
 
       def opened_date
