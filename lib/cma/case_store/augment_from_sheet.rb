@@ -38,7 +38,7 @@ module CMA
               logger.warn "WARNING: case for #{original_url} not in index"
             end
           rescue => e
-            logger.error("\n#{e.message} in row:\n\n#{row}")
+            logger.error("#{e.message} in row\n#{row}")
           end
         end
       end
