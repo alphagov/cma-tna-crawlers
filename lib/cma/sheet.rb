@@ -1,6 +1,18 @@
 require 'csv'
 require 'cma/link'
 
+module Enumerable
+  ##
+  # Return first truthy result as returned by the given block for an enumerable
+  def find_yield(fallback=nil)
+    each do |item|
+      result = yield(item)
+      return result if result
+    end
+    fallback
+  end
+end
+
 module CMA
   class Sheet
     attr_accessor :filename
@@ -10,7 +22,8 @@ module CMA
     end
 
     class Row
-      DATE_FORMAT = '%d/%m/%y'
+      SLASHED_DATE_FORMAT = '%d/%m/%y'
+      DOTTED_DATE_FORMAT  = '%d.%m.%y'
 
       OUTCOME_MAPPINGS = {
         'Undertakings'               => 'consumer-enforcement-undertakings',
@@ -37,18 +50,29 @@ module CMA
       end
 
       def opened_date
-        date_str = @row['Open date']
-        @_open_date ||=
-          Date.strptime(date_str, DATE_FORMAT) unless date_str.nil?
+        @_open_date ||= Row.parse_date(@row['Open date'])
       end
 
       def closed_date
-        @_decision_date ||=
-          Date.strptime(@row['Closed date'], DATE_FORMAT)
+        @_decision_date ||= Row.parse_date(@row['Closed date'])
       end
 
       def link
         @_link ||= CMA::Link.new(@row['Archive URL'])
+      end
+
+      def self.parse_date(date_str)
+        return nil if date_str.nil?
+
+        [SLASHED_DATE_FORMAT, DOTTED_DATE_FORMAT].find_yield do |format|
+          begin
+            Date.strptime(date_str, format)
+          rescue ArgumentError
+            nil
+          end
+        end.tap do |result|
+          raise ArgumentError, 'invalid date' if result.nil?
+        end
       end
     end
 
@@ -60,7 +84,7 @@ module CMA
       end
     end
 
-    def Sheet.all
+    def self.all
       @_all_sheets = begin
         Dir['sheets/*.csv'].map do |filename|
           Sheet.new(filename)
