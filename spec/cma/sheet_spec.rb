@@ -62,7 +62,7 @@ describe CMA::Sheet do
   context 'CC' do
     Given(:filename) { 'sheets/cc.csv' }
 
-    Then { sheet.rows.size == 135 }
+    Then { sheet.rows.size == 134 }
 
     describe 'the first row' do
       Given(:row) { sheet.rows[0] }
