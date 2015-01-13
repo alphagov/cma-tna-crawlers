@@ -23,5 +23,10 @@ describe CMA::Schema do
         schema.market_sector['Healthcare and medical equipment']
       ).to eql('healthcare-and-medical-equipment')
     end
+    it 'cares not about case' do
+      expect(
+        schema.market_sector['healthcare AND mEdical equiPMent']
+      ).to eql('healthcare-and-medical-equipment')
+    end
   end
 end

@@ -2,6 +2,12 @@ require 'json'
 
 module CMA
   class Schema
+    class InsensitiveAccessHash < Hash
+      def [](key)
+        key.respond_to?(:downcase) ? super(key.downcase) : super(key)
+      end
+    end
+
     def outcome_types
       @_outcome_types ||= get_allowed_value_hash('outcome_type')
     end
@@ -13,10 +19,12 @@ module CMA
     def get_allowed_value_hash(key)
       keyed_section = json_hash['facets'].find { |hash| hash['key'] == key }
 
-      keyed_section['allowed_values'].inject({}) do |output_hash, label_value|
+      keyed_section['allowed_values'].inject(
+        InsensitiveAccessHash.new
+      ) do |output_hash, label_value|
         label, value = label_value['label'], label_value['value']
 
-        output_hash[label] = value
+        output_hash[label.downcase] = value
         output_hash
       end
     end
