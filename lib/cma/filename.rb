@@ -1,3 +1,5 @@
+require 'uri'
+
 module CMA
   class Filename
     MAPPINGS = {
