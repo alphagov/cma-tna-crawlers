@@ -77,6 +77,10 @@ module CMA
           raise ArgumentError, 'invalid date' if result.nil?
         end
       end
+
+      def to_s
+        @row.to_s
+      end
     end
 
     def rows
