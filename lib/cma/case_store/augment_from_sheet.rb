@@ -28,10 +28,15 @@ module CMA
 
             if filename && case_store.file_exists?(filename)
               case_store.load(filename).tap do |_case|
-                _case.opened_date   = row.opened_date
-                _case.closed_date   = row.closed_date
-                _case.market_sector = schema.market_sector[row.market_sector]
-                _case.outcome_type  = row.outcome_type
+                _case.opened_date   = row.opened_date or
+                  logger.warn("no opened_date for #{original_url}")
+                _case.closed_date   = row.closed_date or
+                  logger.warn("no closed_date for #{original_url}")
+                _case.market_sector = schema.market_sector[row.market_sector] or
+                  logger.warn("no market_sector for #{original_url}")
+                _case.outcome_type  = row.outcome_type or
+                  logger.warn("no market_sector for #{original_url}")
+
                 case_store.save(_case)
               end
             else
