@@ -13,6 +13,26 @@ module CMA
       ASSET             = %r{/assets/.*\.pdf$}
 
       FOLLOW_ONLY = [ATOZ, CASE, SUBPAGE, ASSET]
+      IGNORE_EXPLICITLY = %w(
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/aggregates-cement-ready-mix-concrete
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/akzo-nobel-metlac
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/anglo-american-lafarge
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/breedon-aggregates-aggregate-industries
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/cineworld-city-screen
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/ericsson-creative
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/eurotunnel-seafrance
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/global-radio-gmg-merger-inquiry
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/northern-ireland-electricity-price-determination
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/omnicell-surgichem
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/payday-lending
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/private-healthcare-market-investigation
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/private-motor-insurance-market-investigation
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/review-of-ims-health-incorporated-undertakings
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/ryanair-aer-lingus
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/statutory-audit-services
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/tradebe-sita
+        http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/verizon-vodafone-appeal
+      )
 
       ##
       # Context-sensitive set of links per page
@@ -74,7 +94,7 @@ module CMA
             link_nodes_for(page).map do |a|
               next unless (href = a['href'])
 
-              if FOLLOW_ONLY.any? { |pattern| pattern =~ href }
+              if should_follow?(href)
                 begin
                   normalize_uri(href)
                 rescue URI::InvalidURIError
@@ -84,6 +104,11 @@ module CMA
             end.compact
           end
         end
+      end
+
+      def should_follow?(href)
+        FOLLOW_ONLY.any? { |pattern| pattern =~ href } &&
+          !IGNORE_EXPLICITLY.any? { |open_case_url| href.include?(open_case_url) }
       end
 
     end
