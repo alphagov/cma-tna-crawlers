@@ -20,22 +20,31 @@ module CMA
           new_style?
         end
 
+        CLOSED_CASE_PREFIX = 'OFT closed case: '
+
         def add_summary(doc)
           raise ArgumentError,
                 "#{original_url} is not a new-style case" unless new_style?
 
-          self.summary = 'OFT closed case: ' +
-            doc.at_css('.body-copy h1').text.strip
+          self.summary = CLOSED_CASE_PREFIX +
+            main_header_text(doc)
         end
 
         def add_subpage(doc)
-          subpage_name = subpage_name_for(doc)
+          self.summary = CLOSED_CASE_PREFIX +
+            main_header_text(doc)
 
+          subpage_name = subpage_name_for(doc)
           markup_sections[subpage_name] = subpage_content_for(doc)
+
           original_urls << www(original_url_from_meta(doc))
         end
 
       private
+        def main_header_text(doc)
+          doc.at_css('.body-copy h1').text.strip
+        end
+
         def www(url)
           if url =~ %r{://www\.}
             url

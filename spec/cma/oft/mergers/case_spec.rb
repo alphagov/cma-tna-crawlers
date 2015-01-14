@@ -71,6 +71,12 @@ module CMA::OFT::Mergers
           'http://www.oft.gov.uk/OFTwork/mergers/decisions/2010/london-stock-exchange')
         }
 
+        And {
+          _case.summary == 'OFT closed case: '\
+            'Anticipated acquisition by London Stock Exchange Group Plc '\
+            'of Turquoise Trading Limited'
+        }
+
         describe 'the markdown section' do
           subject(:section) do
             _case.markup_sections['decisions/2010/london-stock-exchange']
