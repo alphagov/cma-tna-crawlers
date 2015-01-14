@@ -40,6 +40,10 @@ module CMA
         @row = row
       end
 
+      def title
+        @row['Title'] || @row['Title ']
+      end
+
       def market_sector
         @row['Market sector']
       end

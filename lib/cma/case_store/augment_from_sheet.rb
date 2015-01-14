@@ -28,14 +28,16 @@ module CMA
 
             if filename && case_store.file_exists?(filename)
               case_store.load(filename).tap do |_case|
-                _case.opened_date   = row.opened_date or
+                _case.opened_date = row.opened_date or
                   logger.warn("opened_date nil for\n#{row.to_s.chomp}")
-                _case.closed_date   = row.closed_date or
+                _case.closed_date = row.closed_date or
                   logger.warn("closed_date nil for\n#{row.to_s.chomp}")
                 _case.market_sector = schema.market_sector[row.market_sector] or
                   logger.warn("market_sector nil for\n#{row.to_s.chomp}")
-                _case.outcome_type  = row.outcome_type or
+                _case.outcome_type = row.outcome_type or
                   logger.warn("outcome_type nil for\n#{row.to_s.chomp}")
+                _case.title = row.title or
+                  logger.warn("title nil for\n#{row.to_s.chomp}")
 
                 case_store.save(_case)
               end
