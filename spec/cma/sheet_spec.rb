@@ -174,7 +174,7 @@ describe CMA::Sheet do
     context '10' do
       Given(:filename) { 'sheets/mergers09-14/Mergers 10-11-Table 1.csv' }
 
-      Then { sheet.rows.size == 183 }
+      Then { sheet.rows.size == 180 }
 
       describe 'the first row' do
         Given(:row) { sheet.rows[0] }
