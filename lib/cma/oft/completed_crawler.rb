@@ -19,8 +19,14 @@ module CMA
             case_store, noclobber: true)
         when CASE_DETAIL
           puts ' Case Detail'
-          with_case(original_url, original_url) do |_case|
-            _case.add_detail(page.doc)
+          begin
+            with_case(original_url, original_url) do |_case|
+              _case.add_detail(page.doc)
+            end
+          rescue Errno::ENOENT
+            puts 'Case not found:'
+            dump_referer_chain(page)
+            puts
           end
         when ASSET
           puts ' ASSET'

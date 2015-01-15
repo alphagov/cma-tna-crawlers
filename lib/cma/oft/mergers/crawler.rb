@@ -49,7 +49,10 @@ module CMA
         ASSET     = %r{(?<!Brie1)\.pdf$} # Delicious Brie1 actually a briefing note
 
         FOLLOW_ONLY = [CASE, SUBPAGE, ASSET]
-        IGNORE_EXPLICITLY = []
+        IGNORE_EXPLICITLY = [
+          # Duplicate of .../capita differing only by 'C'
+          'http://webarchive.nationalarchives.gov.uk/20140402142426/http://www.oft.gov.uk/OFTwork/mergers/decisions/2013/Capita'
+        ]
 
         def create_or_update_content_for(page)
           original_url = CMA::Link.new(page.url).original_url
@@ -111,7 +114,6 @@ module CMA
 
         def merger_entry_points
           %w(
-            OFTwork/mergers/decisions/2010/
             OFTwork/mergers/Mergers_Cases/2009/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2008/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2007/?Order=Date&currentLetter=A
@@ -120,9 +122,10 @@ module CMA
             OFTwork/mergers/Mergers_Cases/2004/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2003/?Order=Date&currentLetter=A
             OFTwork/mergers/decisions/2014/
-            OFTwork/mergers/decisions/2013/
             OFTwork/mergers/decisions/2012/
+            OFTwork/mergers/decisions/2013/
             OFTwork/mergers/decisions/2011/
+            OFTwork/mergers/decisions/2010/
           ).map {|path| TNA_BASE + OFT_BASE + path}
         end
 
