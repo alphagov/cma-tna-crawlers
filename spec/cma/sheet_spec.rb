@@ -171,6 +171,33 @@ describe CMA::Sheet do
         end
       end
     end
+    context '10' do
+      Given(:filename) { 'sheets/mergers09-14/Mergers 10-11-Table 1.csv' }
+
+      Then { sheet.rows.size == 183 }
+
+      describe 'the first row' do
+        Given(:row) { sheet.rows[0] }
+
+        Then { expect(row).to be_a(CMA::Sheet::Row) }
+
+        Then { row.market_sector == 'Food manufacturing' }
+        Then { row.opened_date   == nil }
+        Then { row.closed_date   == nil }
+        Then { row.outcome_type  == 'mergers-phase-1-clearance' }
+
+        Then  {
+          row.link.original_url ==
+            'http://www.oft.gov.uk/OFTwork/mergers/decisions/2010/2-sisters'
+        }
+
+        it 'parses all dates' do
+          sheet.rows.each do |row|
+            expect(row.opened_date).to satisfy {|date| date.nil? || date.is_a?(Date)}
+          end
+        end
+      end
+    end
   end
 
   describe '.all' do
@@ -201,6 +228,18 @@ describe CMA::Sheet do
       Given(:date_str) { '17.02.04' }
 
       Then { result == Date.new(2004, 02, 17) }
+    end
+
+    context 'American slashed dates (no zero)' do
+      Given(:date_str) { '2/17/04' }
+
+      Then { result == Date.new(2004, 02, 17) }
+    end
+
+    context 'year-only' do
+      Given(:date_str) { '2010' }
+
+      Then { result == nil }
     end
 
     context 'bad input' do

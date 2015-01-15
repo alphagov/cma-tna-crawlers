@@ -27,6 +27,7 @@ module CMA
       DOTTED_DATE_FORMAT        = '%d.%m.%y'
       DASHED_THREE_LETTER_MONTH = '%d-%b-%y'
       AMERICAN_NO_LEAD_ZERO     = '%m/%d/%y' # Yes, really
+      YEAR_ONLY                 = /20[0-9]{2}/
 
       POSSIBLE_DATE_FORMATS = [
         SLASHED_DATE_FORMAT,
@@ -94,7 +95,7 @@ module CMA
             nil
           end
         end.tap do |result|
-          raise ArgumentError, 'invalid date' if result.nil?
+          raise ArgumentError, 'invalid date' if result.nil? && date_str !~ YEAR_ONLY
         end
       end
 
