@@ -6,9 +6,13 @@ require 'cma/case_store/augment_from_sheet'
 
 case_store = CMA::CaseStore.new
 
-name = ARGV[0]
+names = ARGV
 
-sheets = name ? [CMA::Sheet.new(name)] : CMA::Sheet.all
+sheets = if names.any?
+           names.map { |name| CMA::Sheet.new(name) }
+         else
+           CMA::Sheet.all
+         end
 
 sheets.each do |sheet|
   puts "Augmenting with #{sheet.filename}"

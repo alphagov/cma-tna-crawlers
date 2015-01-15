@@ -11,20 +11,20 @@ describe CMA::CaseStore::AugmentFromSheet do
   after  { FileUtils.rmtree(case_store.location) }
 
   context 'augmenting consumer cases' do
+    let(:null_logger) do
+      Logger.new(File.open('/dev/null', File::WRONLY))
+    end
+
     Given(:augment) do
       CMA::CaseStore::AugmentFromSheet.new(
-        case_store, CMA::Sheet.new('sheets/consumer-enforcement.csv'))
+        case_store, CMA::Sheet.new('sheets/consumer-enforcement.csv'), null_logger)
     end
 
     Then { augment.case_store == case_store }
     And  { augment.sheet.filename == 'sheets/consumer-enforcement.csv' }
 
     describe 'the results' do
-      let(:null_logger) do
-        Logger.new(File.open('/dev/null', File::WRONLY))
-      end
-
-      Given { augment.run!(null_logger) }
+      Given { augment.run! }
 
       When(:loaded_case) do
         case_store.find(

@@ -89,6 +89,63 @@ describe CMA::Sheet do
     end
   end
 
+  context 'Mergers' do
+    context '06-07' do
+      Given(:filename) { 'sheets/mergers06-08/Mergers 06-07-Table 1.csv' }
+
+      Then { sheet.rows.size == 262 }
+
+      describe 'the first row' do
+        Given(:row) { sheet.rows[0] }
+
+        Then { expect(row).to be_a(CMA::Sheet::Row) }
+
+        Then { row.market_sector == 'Transport' }
+        Then { row.opened_date   == nil }
+        Then { row.closed_date   == Date.new(2007, 11, 28) }
+        Then { row.outcome_type  == 'mergers-phase-1-found-not-to-qualify' }
+
+        Then  {
+          row.link.original_url ==
+            'http://www.oft.gov.uk/OFTwork/mergers/Mergers_Cases/2007/GoNorthEast'
+        }
+
+        it 'parses all dates' do
+          sheet.rows.each do |row|
+            expect(row.opened_date).to satisfy {|date| date.nil? || date.is_a?(Date)}
+          end
+        end
+      end
+    end
+    context '08' do
+      Given(:filename) { 'sheets/mergers06-08/Mergers 08-Table 1.csv' }
+
+      Then { sheet.rows.size == 88 }
+
+      describe 'the first row' do
+        Given(:row) { sheet.rows[0] }
+
+        Then { expect(row).to be_a(CMA::Sheet::Row) }
+
+        Then { row.market_sector == 'Energy' }
+        Then { row.opened_date   == nil }
+        Then { row.closed_date   == Date.new(2008, 10, 23) }
+        Then { row.outcome_type  == 'mergers-phase-1-found-not-to-qualify' }
+
+        Then  {
+          row.link.original_url ==
+            'http://www.oft.gov.uk/OFTwork/mergers/Mergers_Cases/2008/Nuclear'
+        }
+
+        it 'parses all dates' do
+          sheet.rows.each do |row|
+            expect(row.opened_date).to satisfy {|date| date.nil? || date.is_a?(Date)}
+          end
+        end
+      end
+    end
+  end
+
   describe '.all' do
     Given(:sheet_files) { Dir['sheets/*.csv'] }
 
