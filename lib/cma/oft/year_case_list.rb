@@ -1,5 +1,6 @@
 require 'cma/link'
 require 'cma/oft/case'
+require 'cma/oft/mergers/case'
 
 module CMA
   module OFT
@@ -35,7 +36,10 @@ module CMA
       end
 
       def old_case_links
-        @old_case_links ||= doc.css('.body-copy li a').map {|a| Link.new(a['href'], a.text) }
+        @old_case_links ||= begin
+          all_old_case_links = doc.css('.body-copy li a').map {|a| Link.new(a['href'], a.text) }
+          all_old_case_links.reject {|link| link.original_url =~ Mergers::Case::SUBPAGE_NOT_CASE}
+        end
       end
     end
   end

@@ -100,12 +100,23 @@ module CMA::OFT
         context '2010 case list (representative of 2010-2014 type)' do
           Given(:filename) { 'mergers-case-list-2010.html' }
 
-          When(:_case) { list.cases.first }
+          Then { list.cases.size == 70 }
 
-          Then { list.cases.size == 79 }
+          it 'does not recognise subpages as cases, as this would leave'\
+             'cases that are not cases in the case store' do
+            require 'cma/oft/mergers/case'
 
-          Then { _case.title        == '2 Sisters' }
-          Then { _case.original_url == 'http://www.oft.gov.uk/OFTwork/mergers/decisions/2010/2-sisters' }
+            list.cases.map(&:original_url).each do |original_url|
+              expect(original_url).not_to match(Mergers::Case::SUBPAGE_NOT_CASE)
+            end
+          end
+
+          describe 'the first case' do
+            When(:_case) { list.cases.first }
+
+            Then { _case.title        == '2 Sisters' }
+            Then { _case.original_url == 'http://www.oft.gov.uk/OFTwork/mergers/decisions/2010/2-sisters' }
+          end
         end
       end
     end

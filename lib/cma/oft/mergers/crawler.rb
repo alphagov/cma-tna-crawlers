@@ -1,5 +1,6 @@
 require 'cma/oft/crawler'
 require 'cma/case_store/index'
+require 'cma/oft/mergers/case'
 
 module CMA
   module OFT
@@ -21,15 +22,6 @@ module CMA
           /?$
         }x
 
-        ##
-        # Nine subpages for cases that started 2009, but which appear
-        # at new-style URLs (so would be incorrectly matched as 2010 cases
-        # if left alone)
-        SUBPAGE_NOT_CASE = %r{
-          (london-stock-exchange|go-north-east|Aggregate|Koppers|arriva|
-           co-op-psw|ambassador|co-operative1|phs-teacrate)
-        }x
-
         CASE      = %r{
           OFTwork/mergers/
           (?:
@@ -41,7 +33,7 @@ module CMA
               # "old-style" case.
               # List them here.
 
-              (?!/#{SUBPAGE_NOT_CASE})
+              (?!/#{Case::SUBPAGE_NOT_CASE})
             )|
             (Mergers_Cases/200[0-9])  # 2002-09 cases pages are at /Mergers_Cases
           )
@@ -51,7 +43,7 @@ module CMA
         SUBPAGE = %r{
           OFTwork/mergers/
           (decisions/200[0-9]/[a-z|A-Z|0-9|_|-]+/?$)|
-          (decisions/2010/#{SUBPAGE_NOT_CASE})
+          (decisions/2010/#{Case::SUBPAGE_NOT_CASE})
         }x
 
         ASSET     = %r{(?<!Brie1)\.pdf$} # Delicious Brie1 actually a briefing note
@@ -97,12 +89,14 @@ module CMA
               end
             rescue Errno::ENOENT
               puts "WARNING: no case for ASSET #{original_url}"
+              dump_referer_chain(page, 1)
+              puts
             end
           end
         end
 
         def decision_from_2009_case?(original_url, page)
-          original_url =~ SUBPAGE_NOT_CASE &&
+          original_url =~ Case::SUBPAGE_NOT_CASE &&
             page.referer.to_s =~ %r{mergers/decisions/2010/?$}
         end
 
@@ -118,10 +112,6 @@ module CMA
         def merger_entry_points
           %w(
             OFTwork/mergers/decisions/2010/
-            OFTwork/mergers/decisions/2014/
-            OFTwork/mergers/decisions/2013/
-            OFTwork/mergers/decisions/2012/
-            OFTwork/mergers/decisions/2011/
             OFTwork/mergers/Mergers_Cases/2009/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2008/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2007/?Order=Date&currentLetter=A
@@ -129,6 +119,10 @@ module CMA
             OFTwork/mergers/Mergers_Cases/2005/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2004/?Order=Date&currentLetter=A
             OFTwork/mergers/Mergers_Cases/2003/?Order=Date&currentLetter=A
+            OFTwork/mergers/decisions/2014/
+            OFTwork/mergers/decisions/2013/
+            OFTwork/mergers/decisions/2012/
+            OFTwork/mergers/decisions/2011/
           ).map {|path| TNA_BASE + OFT_BASE + path}
         end
 

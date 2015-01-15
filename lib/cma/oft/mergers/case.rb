@@ -4,6 +4,15 @@ module CMA
   module OFT
     module Mergers
       class Case < CMA::OFT::Case
+        ##
+        # Nine subpages for cases that started 2009, but which appear
+        # at new-style URLs (so would be incorrectly matched as 2010 cases
+        # if left alone)
+        SUBPAGE_NOT_CASE = %r{
+          (london-stock-exchange|go-north-east|Aggregate|Koppers|arriva|
+           co-op-psw|ambassador|co-operative1|phs-teacrate)
+        }x
+
         def case_type
           'mergers'
         end
