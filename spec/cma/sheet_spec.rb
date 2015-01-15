@@ -201,7 +201,7 @@ describe CMA::Sheet do
   end
 
   describe '.all' do
-    Given(:sheet_files) { Dir['sheets/*.csv'] }
+    Given(:sheet_files) { Dir['sheets/**/*.csv'] }
 
     it 'has all sheets' do
       expect(CMA::Sheet.all.map(&:filename)).to \

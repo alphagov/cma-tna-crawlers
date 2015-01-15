@@ -114,7 +114,7 @@ module CMA
 
     def self.all
       @_all_sheets = begin
-        Dir['sheets/*.csv'].map do |filename|
+        Dir['sheets/**/*.csv'].map do |filename|
           Sheet.new(filename)
         end
       end.tap do |sheets|
