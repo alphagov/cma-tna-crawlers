@@ -1,4 +1,4 @@
-require 'cma/oft/crawler'
+require 'cma/oft/current/crawler'
 require 'cma/case_store/index'
 
 module CMA
@@ -6,7 +6,7 @@ module CMA
     ##
     # Crawl completed cases pages to mop up missing cases
     #
-    class CompletedCrawler < CMA::OFT::Crawler
+    class CompletedCrawler < CMA::OFT::Current::Crawler
       CONSUMER_ENFORCEMENT_COMPLETED = OFT_BASE + 'OFTwork/consumer-enforcement/consumer-enforcement-completed/'
       MARKETS_COMPLETED              = OFT_BASE + 'OFTwork/markets-work/completed/'
 

@@ -23,9 +23,17 @@ module CMA
     end
 
     class Row
-      SLASHED_DATE_FORMAT      = '%d/%m/%y'
-      DOTTED_DATE_FORMAT       = '%d.%m.%y'
-      YET_ANOTHER_DATE_FORMAT  = '%d-%b-%y'
+      SLASHED_DATE_FORMAT       = '%d/%m/%y'
+      DOTTED_DATE_FORMAT        = '%d.%m.%y'
+      DASHED_THREE_LETTER_MONTH = '%d-%b-%y'
+      AMERICAN_NO_LEAD_ZERO     = '%m/%d/%y' # Yes, really
+
+      POSSIBLE_DATE_FORMATS = [
+        SLASHED_DATE_FORMAT,
+        DOTTED_DATE_FORMAT,
+        DASHED_THREE_LETTER_MONTH,
+        AMERICAN_NO_LEAD_ZERO
+      ]
 
       OUTCOME_MAPPINGS = {
         'Undertakings'               => 'consumer-enforcement-undertakings',
@@ -46,7 +54,7 @@ module CMA
       end
 
       def market_sector
-        @row['Market sector']
+        @row['Market sector'] || @row['New CMA market sector']
       end
 
       def ref
@@ -79,11 +87,7 @@ module CMA
       def self.parse_date(date_str)
         return nil if date_str.nil?
 
-        [
-          SLASHED_DATE_FORMAT,
-          DOTTED_DATE_FORMAT,
-          YET_ANOTHER_DATE_FORMAT
-        ].find_yield do |format|
+        POSSIBLE_DATE_FORMATS.find_yield do |format|
           begin
             Date.strptime(date_str, format)
           rescue ArgumentError

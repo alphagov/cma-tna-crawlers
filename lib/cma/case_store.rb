@@ -53,7 +53,7 @@ module CMA
     MERGER_CASE      = %r{OFTwork[/-]mergers}
     COMPETITION_CASE = %r{OFTwork[/-]oft-current-cases[/-]competition}
     CONSUMER_CASE    = %r{OFTwork[/-](oft-current-cases[/-])?consumer}
-    MARKETS_CASE     = %r{OFTwork[/-]oft-current-cases[/-]markets?-(work|studies)}
+    MARKETS_CASE     = %r{OFTwork[/-](oft-current-cases[/-])?markets?-(work|studies)}
     CC_CASE          = %r{our-work[/-]directory-of-all-inquiries[/-][A-Za-z0-9-]*}
 
     def class_to_load(original_url_or_filename)
