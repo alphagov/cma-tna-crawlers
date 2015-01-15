@@ -113,7 +113,7 @@ module CMA
           Sheet.new(filename)
         end
       end.tap do |sheets|
-        raise Errno::ENOENT, "No sheets found at #{Dir.pwd}" unless sheets.size > 0
+        raise Errno::ENOENT, "No sheets found at #{Dir.pwd}" if sheets.none?
       end
     end
   end
