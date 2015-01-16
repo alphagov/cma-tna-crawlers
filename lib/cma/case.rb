@@ -6,7 +6,8 @@ module CMA
     include ActiveModel::Serializers::JSON
 
     attr_accessor :title, :original_url, :summary, :body,
-                  :opened_date, :closed_date, :market_sector, :outcome_type
+                  :opened_date, :closed_date, :market_sector, :outcome_type,
+                  :modified_by_sheet
 
     # body types that will need body generation/ordering later
     attr_writer :markup_sections

@@ -39,6 +39,7 @@ module CMA
                   schema.market_sector[row.market_sector]
                 end
 
+                _case.modified_by_sheet = true
                 case_store.save(_case)
               end
             else

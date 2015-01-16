@@ -38,6 +38,8 @@ describe CMA::CaseStore::AugmentFromSheet do
       }
       Then { loaded_case.opened_date   == '2012-02-01' }
       Then { loaded_case.closed_date   == '2012-02-01' }
+
+      Then { loaded_case.modified_by_sheet == true}
     end
   end
 
