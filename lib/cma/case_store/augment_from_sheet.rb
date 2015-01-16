@@ -1,6 +1,7 @@
 require 'cma/case_store'
 require 'cma/case_store/index'
 require 'cma/sheet'
+require 'colorize'
 
 module CMA
   class CaseStore
@@ -11,7 +12,13 @@ module CMA
         self.sheet      = sheet
         self.logger     = logger
         logger.formatter = proc do |severity, datetime, progname, msg|
-          "#{severity[0]}: #{msg}\n"
+          severity_letter = severity[0]
+          color = case severity_letter
+            when 'W' then :yellow
+            when 'E' then :red
+            when 'I' then :green
+          end
+          "#{severity_letter.send(color)}: #{msg}\n"
         end
       end
 

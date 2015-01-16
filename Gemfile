@@ -5,6 +5,7 @@ gem 'kramdown'
 gem 'nokogiri'
 gem 'activemodel'
 gem 'listen'
+gem 'colorize'
 
 group :test do
   gem 'rspec'

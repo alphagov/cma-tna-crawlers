@@ -3,6 +3,7 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'cma/case_store/augment_from_sheet'
+require 'colorize'
 
 case_store = CMA::CaseStore.new
 
@@ -15,6 +16,6 @@ sheets = if names.any?
          end
 
 sheets.each do |sheet|
-  puts "Augmenting with #{sheet.filename}"
+  puts "Augmenting with #{sheet.filename}".cyan
   CMA::CaseStore::AugmentFromSheet.new(case_store, sheet).run!
 end
