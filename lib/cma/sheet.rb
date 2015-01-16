@@ -42,6 +42,17 @@ module CMA
         'Court Order'                => 'consumer-enforcement-court-order',
         'No action'                  => 'consumer-enforcement-no-action',
         'markets - phase 1 referral' => 'markets-phase-1-referral',
+        'No grounds for action'      => 'ca98-no-grounds-for-action-non-infringement',
+        'No grounds for action/non-infringement' =>
+                                        'ca98-no-grounds-for-action-non-infringement',
+        'No gounds for action/non-infringement' =>
+                                        'ca98-no-grounds-for-action-non-infringement',
+        'Administrative priorities'  => 'ca98-administrative-priorities',
+        'Infringement of Chapter I'  => 'ca98-infringement-chapter-i',
+        'Infringement of Chapter II' => 'ca98-infringement-chapter-ii',
+        'Infringement of Chapter  II' => 'ca98-infringement-chapter-ii',
+        'Commitments' => 'ca98-commitment',
+        'Criminal cartels - verdict' => 'criminal-cartels-verdict',
         'Regulatory appeals and references - final determination' =>
           'regulatory-references-and-appeals-final-determination',
         '?' => 'UNKNOWN'
@@ -52,6 +63,7 @@ module CMA
         'Distribution and services industries' => 'distribution-and-service-industries',
         'Mineral extraction, mining ang quarrying' => 'mineral-extraction-mining-and-quarrying',
         'Agriculture, environment and nattural resources' => 'agriculture-environment-and-natural-resources',
+        'Agriculture' => 'agriculture-environment-and-natural-resources',
         'Fire, police and security' => 'fire-police-and-security'
       }
 
@@ -65,7 +77,9 @@ module CMA
 
       def market_sector
         sector_title = @row['Market sector'] || @row['New CMA market sector']
-        SECTOR_MAPPINGS[sector_title.strip] ||
+        sector_title.strip! if sector_title
+
+        SECTOR_MAPPINGS[sector_title] ||
           CMA::Schema.instance.market_sector[sector_title]
       end
 
@@ -79,6 +93,8 @@ module CMA
 
       def outcome_type
         outcome_title = @row['Outcome'] || @row['Outcome type']
+        outcome_title.strip! if outcome_title
+
         OUTCOME_MAPPINGS[outcome_title] ||
           CMA::Schema.instance.outcome_types[outcome_title]
       end

@@ -16,6 +16,6 @@ sheets = if names.any?
          end
 
 sheets.each do |sheet|
-  puts "Augmenting with #{sheet.filename}".cyan
+  puts "\nAugmenting with #{sheet.filename}\n".cyan
   CMA::CaseStore::AugmentFromSheet.new(case_store, sheet).run!
 end
