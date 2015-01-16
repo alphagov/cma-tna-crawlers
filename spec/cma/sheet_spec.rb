@@ -7,7 +7,7 @@ describe CMA::Sheet do
   context 'consumer enforcement' do
     Given(:filename) { 'sheets/consumer-enforcement.csv' }
 
-    Then { sheet.rows.size == 49 }
+    Then { sheet.rows.size == 51 }
 
     describe 'the first row' do
       Given(:row) { sheet.rows[0] }
@@ -15,18 +15,21 @@ describe CMA::Sheet do
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
       And  { row.market_sector == 'Recreation and Leisure' }
-      And  { row.opened_date   == Date.new(2013, 6, 1) }
-      And  { row.closed_date   == Date.new(2014, 1, 1) }
-      And  { row.outcome_type  == 'consumer-enforcement-undertakings' }
+      And  { row.opened_date   == Date.new(2005, 9, 1) }
+      And  { row.closed_date   == Date.new(2011, 8, 1) }
+      And  { row.outcome_type  == 'consumer-enforcement-court-order' }
 
       And  {
         row.link.original_url ==
           'http://www.oft.gov.uk'\
-          '/OFTwork/consumer-enforcement/consumer-enforcement-completed/air-travel/'
+          '/OFTwork/consumer-enforcement/consumer-enforcement-completed/ashbourne/'
       }
 
       it 'parses all outcome_types' do
-        sheet.rows.each {|row| expect(row.outcome_type).to be_a(String)}
+        sheet.rows.each_with_index do |row, index|
+          expect(row.outcome_type).to be_a(String),
+            "Row #{index}'s outcome_type was not a string"
+        end
       end
     end
   end
@@ -62,7 +65,7 @@ describe CMA::Sheet do
   context 'CC' do
     Given(:filename) { 'sheets/cc.csv' }
 
-    Then { sheet.rows.size == 132 }
+    Then { sheet.rows.size == 131 }
 
     describe 'the first row' do
       Given(:row) { sheet.rows[0] }

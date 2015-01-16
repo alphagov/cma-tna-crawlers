@@ -31,10 +31,10 @@ describe CMA::CaseStore::AugmentFromSheet do
           'http://www.oft.gov.uk/OFTwork/oft-current-cases/consumer-case-list-2012/acorn')
       end
 
-      Then { loaded_case.outcome_type  == 'consumer-enforcement-undertakings' }
+      Then { loaded_case.outcome_type  == 'consumer-enforcement-no-action' }
       Then { loaded_case.market_sector == 'healthcare-and-medical-equipment' }
       Then { loaded_case.title         ==
-        'Acorn Mobility Services Ltd: consumer terms and conditions'
+        'Acorn Mobility Services Ltd: unfair consumer contract terms and conditions'
       }
       Then { loaded_case.opened_date   == '2012-02-01' }
       Then { loaded_case.closed_date   == '2012-02-01' }

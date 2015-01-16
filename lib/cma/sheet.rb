@@ -39,6 +39,7 @@ module CMA
       OUTCOME_MAPPINGS = {
         'Undertakings'               => 'consumer-enforcement-undertakings',
         'Court order'                => 'consumer-enforcement-court-order',
+        'Court Order'                => 'consumer-enforcement-court-order',
         'No action'                  => 'consumer-enforcement-no-action',
         'markets - phase 1 referral' => 'markets-phase-1-referral',
         'Regulatory appeals and references - final determination' =>
