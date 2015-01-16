@@ -1,7 +1,6 @@
 require 'cma/case_store'
 require 'cma/case_store/index'
 require 'cma/sheet'
-require 'cma/schema'
 
 module CMA
   class CaseStore
@@ -20,10 +19,6 @@ module CMA
         @_index ||= CMA::CaseStore::Index.new(case_store.location)
       end
 
-      def schema
-        @_schema ||= CMA::Schema.new
-      end
-
       def run!
         sheet.rows.each do |row|
           begin
@@ -32,11 +27,10 @@ module CMA
 
             if filename && case_store.file_exists?(filename)
               case_store.load(filename).tap do |_case|
-                %i(opened_date closed_date outcome_type title).each do |field|
+                %i(opened_date closed_date outcome_type
+                   title market_sector
+                ).each do |field|
                   set(_case, row, field)
-                end
-                set(_case, row, :market_sector) do
-                  schema.market_sector[row.market_sector]
                 end
 
                 _case.modified_by_sheet = true

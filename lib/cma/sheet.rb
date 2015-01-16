@@ -47,6 +47,11 @@ module CMA
         '?' => 'UNKNOWN'
       }
 
+      SECTOR_MAPPINGS = {
+        'Distribution and Services Industries ' => 'distribution-and-service-industries',
+        'Distribution and services industries' => 'distribution-and-service-industries'
+      }
+
       def initialize(row)
         @row = row
       end
@@ -56,7 +61,9 @@ module CMA
       end
 
       def market_sector
-        @row['Market sector'] || @row['New CMA market sector']
+        sector_title = @row['Market sector'] || @row['New CMA market sector']
+        SECTOR_MAPPINGS[sector_title] ||
+          CMA::Schema.instance.market_sector[sector_title]
       end
 
       def ref

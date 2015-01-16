@@ -14,7 +14,7 @@ describe CMA::Sheet do
 
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-      And  { row.market_sector == 'Recreation and Leisure' }
+      And  { row.market_sector == 'recreation-and-leisure' }
       And  { row.opened_date   == Date.new(2005, 9, 1) }
       And  { row.closed_date   == Date.new(2011, 8, 1) }
       And  { row.outcome_type  == 'consumer-enforcement-court-order' }
@@ -31,6 +31,17 @@ describe CMA::Sheet do
             "Row #{index}'s outcome_type was not a string"
         end
       end
+
+      FOXTONS_INDEX = 1
+      EHIC_INDEX = 49
+      it 'maps odd sectors' do
+        expect(sheet.rows[FOXTONS_INDEX].market_sector).to \
+          eql('distribution-and-service-industries')
+      end
+      it 'maps odd sectors' do
+        expect(sheet.rows[EHIC_INDEX].market_sector).to \
+          eql('distribution-and-service-industries')
+      end
     end
   end
 
@@ -44,7 +55,7 @@ describe CMA::Sheet do
 
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-      And  { row.market_sector == 'Transport' }
+      And  { row.market_sector == 'transport' }
       And  { row.opened_date   == Date.new(2006, 12, 1) }
       And  { row.closed_date   == Date.new(2007, 3, 30) }
       And  { row.outcome_type  == 'markets-phase-1-referral' }
@@ -72,7 +83,7 @@ describe CMA::Sheet do
 
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-      And  { row.market_sector == 'Transport' }
+      And  { row.market_sector == 'transport' }
       And  { row.opened_date   == Date.new(2007, 3, 29) }
       And  { row.closed_date   == Date.new(2009, 3, 19) }
       And  { row.outcome_type  == 'markets-phase-2-adverse-effect-on-competition-leading-to-remedies' }
@@ -101,7 +112,7 @@ describe CMA::Sheet do
 
         Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-        Then { row.market_sector == 'Transport' }
+        Then { row.market_sector == 'transport' }
         Then { row.opened_date   == nil }
         Then { row.closed_date   == Date.new(2007, 11, 28) }
         Then { row.outcome_type  == 'mergers-phase-1-found-not-to-qualify' }
@@ -128,7 +139,7 @@ describe CMA::Sheet do
 
         Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-        Then { row.market_sector == 'Energy' }
+        Then { row.market_sector == 'energy' }
         Then { row.opened_date   == nil }
         Then { row.closed_date   == Date.new(2008, 10, 23) }
         Then { row.outcome_type  == 'mergers-phase-1-found-not-to-qualify' }
@@ -155,7 +166,7 @@ describe CMA::Sheet do
 
         Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-        Then { row.market_sector == 'Agriculture, environment and natural resources' }
+        Then { row.market_sector == 'agriculture-environment-and-natural-resources' }
         Then { row.opened_date   == nil }
         Then { row.closed_date   == Date.new(2009, 4, 17) }
         Then { row.outcome_type  == 'mergers-phase-1-clearance' }
@@ -182,7 +193,7 @@ describe CMA::Sheet do
 
         Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-        Then { row.market_sector == 'Food manufacturing' }
+        Then { row.market_sector == 'food-manufacturing' }
         Then { row.opened_date   == nil }
         Then { row.closed_date   == nil }
         Then { row.outcome_type  == 'mergers-phase-1-clearance' }
