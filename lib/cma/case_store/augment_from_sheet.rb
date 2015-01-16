@@ -46,7 +46,6 @@ module CMA
             end
           rescue => e
             logger.error("#{e.message} in row\n#{row}")
-            raise
           end
         end
       end
