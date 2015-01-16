@@ -51,7 +51,7 @@ module CMA
     end
 
     MERGER_CASE      = %r{OFTwork[/-]mergers}
-    COMPETITION_CASE = %r{OFTwork[/-]oft-current-cases[/-]competition}
+    COMPETITION_CASE = %r{OFTwork[/-](oft-current-cases[/-])?competition}
     CONSUMER_CASE    = %r{OFTwork[/-](oft-current-cases[/-])?consumer}
     MARKETS_CASE     = %r{OFTwork[/-](oft-current-cases[/-])?markets?-(work|studies)}
     CC_CASE          = %r{our-work[/-]directory-of-all-inquiries[/-][A-Za-z0-9-]*}

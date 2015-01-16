@@ -13,6 +13,14 @@ module CMA
       OFT_BASE      = 'http://www.oft.gov.uk/'
       CURRENT_CASES_ROOT = File.join(TNA_BASE, OFT_BASE, '/OFTwork/oft-current-cases/')
 
+      def canonicalize_uri(href)
+        URI(href)
+      end
+
+      def link_nodes_for(page)
+        page.doc.css('.body-copy a')
+      end
+
       def focus_on_interesting_body_copy_links(crawl)
         crawl.focus_crawl do |page|
           next [] if page.doc.nil?

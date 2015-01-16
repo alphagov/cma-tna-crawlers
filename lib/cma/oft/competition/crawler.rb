@@ -1,0 +1,86 @@
+require 'cma/oft/crawler'
+require 'cma/case_store/index'
+
+module CMA
+  module OFT
+    module Competition
+      ##
+      # Crawl completed competition/ca98/criminal cases
+      #
+      class Crawler < CMA::OFT::Crawler
+        CA98_CLOSURE      = OFT_BASE + 'OFTwork/competition-act-and-cartels/ca98/closure/'
+        CA98_COMPLETED    = OFT_BASE + 'OFTwork/competition-act-and-cartels/ca98/'
+        CARTELS_COMPLETED = OFT_BASE + 'OFTwork/competition-act-and-cartels/criminal-cartels-completed/'
+
+        CASE_DETAIL        =
+          %r{
+            /OFTwork/
+            (?:
+              (?:competition-act-and-cartels(?:/ca98(-current)?(?:/closure)?)?)|
+            )
+            (?!/decisions/?$)
+            (?!/closure/?$)
+            (?!/ca98/?$)
+            /[a-z|A-Z|0-9|_|-]+/?$
+          }x
+
+        ASSET              = %r{(?<!Brie1)\.pdf$} # Delicious Brie1 actually a briefing note
+
+        FOLLOW_ONLY = [
+         CASE_DETAIL,
+         ASSET
+        ]
+        IGNORE_EXPLICITLY = [
+          TNA_BASE + OFT_BASE + 'OFTwork/competition-act-and-cartels/competition-law-compliance/',
+          TNA_BASE + OFT_BASE + 'OFTwork/competition-act-and-cartels/ca98-current/',
+          TNA_BASE + OFT_BASE + 'OFTwork/competition-act-and-cartels/ca98/closure/motor-insurance-qanda/',
+          TNA_BASE + OFT_BASE + 'OFTwork/competition-act-and-cartels/ca98-current/commercial-vehicle-criminal/',
+          TNA_BASE + 'http://stg-new-oft:8080/OFTwork/competition-act-and-cartels/ca98-current/commercial-vehicle-criminal/'
+        ]
+
+        def should_follow?(href)
+          FOLLOW_ONLY.any? { |pattern| pattern =~ href } &&
+            IGNORE_EXPLICITLY.none? { |pattern| pattern == href }
+        end
+
+        def create_or_update_content_for(page)
+          original_url = CMA::Link.new(page.url).original_url
+
+          case original_url
+          when CA98_CLOSURE, CA98_COMPLETED, CARTELS_COMPLETED
+            CMA::OFT::YearCaseList.new(page.doc).save_to(
+              case_store, noclobber: true)
+          when CASE_DETAIL
+            puts ' Case Detail'
+            with_case(original_url, original_url) do |_case|
+              _case.add_detail(page.doc)
+            end
+          when ASSET
+            puts ' ASSET'
+            return if page.referer.to_s =~ /doorstep-selling/
+            with_nearest_case_matching(page.referer, CASE_DETAIL) do |_case|
+              asset = CMA::Asset.new(original_url, _case, page.body, page.headers['content-type'].first)
+              asset.save!(case_store.location)
+              _case.assets << asset
+            end
+          end
+        end
+
+        def crawl!
+          CMA::Filename::MAPPINGS.delete_if { true }
+
+          [
+            CA98_CLOSURE,
+            CA98_COMPLETED,
+            CARTELS_COMPLETED,
+          ].map { |original_url| TNA_BASE + original_url }.each do |start_url|
+            do_crawl(start_url,
+                     newline_after_url: false) do |crawl|
+              focus_on_interesting_body_copy_links(crawl)
+            end
+          end
+        end
+      end
+    end
+  end
+end
