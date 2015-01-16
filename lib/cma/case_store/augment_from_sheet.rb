@@ -49,8 +49,9 @@ module CMA
         value = block_given? ? yield : row.send(field)
 
         setter = "#{field}="
-        _case.send(setter, value) or
-          logger.warn("#{field} nil for #{row.to_s.chomp}")
+        value_set = _case.send(setter, value)
+
+        logger.warn("#{field} nil for #{row.to_s.chomp}") unless value_set || field.to_s =~ /date/
       end
     end
   end

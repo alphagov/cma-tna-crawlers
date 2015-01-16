@@ -49,7 +49,10 @@ module CMA
 
       SECTOR_MAPPINGS = {
         'Distribution and Services Industries ' => 'distribution-and-service-industries',
-        'Distribution and services industries' => 'distribution-and-service-industries'
+        'Distribution and services industries' => 'distribution-and-service-industries',
+        'Mineral extraction, mining ang quarrying' => 'mineral-extraction-mining-and-quarrying',
+        'Agriculture, environment and nattural resources' => 'agriculture-environment-and-natural-resources',
+        'Fire, police and security' => 'fire-police-and-security'
       }
 
       def initialize(row)
