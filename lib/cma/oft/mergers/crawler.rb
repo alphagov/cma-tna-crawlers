@@ -150,7 +150,7 @@ module CMA
 
         def should_follow?(href)
           FOLLOW_ONLY.any? { |pattern| pattern =~ href } &&
-            IGNORE_EXPLICITLY.none? { |pattern| pattern =~ href }
+            IGNORE_EXPLICITLY.none? { |url| url == href }
         end
 
         def link_nodes_for(page)
