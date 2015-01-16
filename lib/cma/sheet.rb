@@ -48,7 +48,7 @@ module CMA
       }
 
       SECTOR_MAPPINGS = {
-        'Distribution and Services Industries ' => 'distribution-and-service-industries',
+        'Distribution and Services Industries' => 'distribution-and-service-industries',
         'Distribution and services industries' => 'distribution-and-service-industries',
         'Mineral extraction, mining ang quarrying' => 'mineral-extraction-mining-and-quarrying',
         'Agriculture, environment and nattural resources' => 'agriculture-environment-and-natural-resources',
@@ -65,7 +65,7 @@ module CMA
 
       def market_sector
         sector_title = @row['Market sector'] || @row['New CMA market sector']
-        SECTOR_MAPPINGS[sector_title] ||
+        SECTOR_MAPPINGS[sector_title.strip] ||
           CMA::Schema.instance.market_sector[sector_title]
       end
 
