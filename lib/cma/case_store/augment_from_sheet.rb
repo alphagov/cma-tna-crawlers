@@ -44,7 +44,7 @@ module CMA
                 case_store.save(_case)
               end
             else
-              logger.warn "case for '#{original_url}' not in index"
+              logger.warn "case for #{original_url} not in index"
             end
           rescue => e
             logger.error("#{e.message} in row\n#{row}")
