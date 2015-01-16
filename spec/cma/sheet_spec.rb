@@ -62,23 +62,21 @@ describe CMA::Sheet do
   context 'CC' do
     Given(:filename) { 'sheets/cc.csv' }
 
-    Then { sheet.rows.size == 134 }
+    Then { sheet.rows.size == 132 }
 
     describe 'the first row' do
       Given(:row) { sheet.rows[0] }
 
       Then { expect(row).to be_a(CMA::Sheet::Row) }
 
-      And  { row.market_sector == 'Pharmaceuticals' }
-      And  { row.opened_date   == Date.new(2003, 12, 3) }
-      And  { row.closed_date   == Date.new(2003, 12, 23) }
-      And  { row.outcome_type  == 'mergers-phase-1-referral' }
+      And  { row.market_sector == 'Transport' }
+      And  { row.opened_date   == Date.new(2007, 3, 29) }
+      And  { row.closed_date   == Date.new(2009, 3, 19) }
+      And  { row.outcome_type  == 'markets-phase-2-adverse-effect-on-competition-leading-to-remedies' }
 
       And  {
         row.link.original_url ==
-          'http://www.competition-commission.org.uk/our-work/'\
-          'directory-of-all-inquiries/'\
-          'aah-pharmaceuticals-limited-east-anglian-pharmaceuticals-limited'
+          'http://www.competition-commission.org.uk/our-work/directory-of-all-inquiries/baa-airports'
       }
 
       it 'parses all dates' do
