@@ -10,36 +10,59 @@ describe CMA::CaseStore::AugmentFromSheet do
   end
   after  { FileUtils.rmtree(case_store.location) }
 
-  context 'augmenting consumer cases' do
-    let(:null_logger) do
-      Logger.new(File.open('/dev/null', File::WRONLY))
+  context 'augmenting cases' do
+    let(:error_only_logger) do
+      # Logger.new(File.open('/dev/null', File::WRONLY))
+      Logger.new(STDOUT).tap do |logger|
+        logger.level = Logger::ERROR
+      end
     end
 
     Given(:augment) do
       CMA::CaseStore::AugmentFromSheet.new(
-        case_store, CMA::Sheet.new('sheets/consumer-enforcement.csv'), null_logger)
+        case_store, CMA::Sheet.new(filename), error_only_logger)
     end
 
-    Then { augment.case_store == case_store }
-    And  { augment.sheet.filename == 'sheets/consumer-enforcement.csv' }
+    Given { augment.run! }
 
-    describe 'the results' do
-      Given { augment.run! }
+    context 'augmenting consumer cases' do
+      Given(:filename) { 'sheets/consumer-enforcement.csv' }
+
+      Then { augment.case_store == case_store }
+      And  { augment.sheet.filename == filename }
+
+      describe 'the results' do
+        Given(:filename) { 'sheets/consumer-enforcement.csv' }
+
+        When(:loaded_case) do
+          case_store.find(
+            'http://www.oft.gov.uk/OFTwork/oft-current-cases/consumer-case-list-2012/acorn')
+        end
+
+        Then { loaded_case.outcome_type  == 'consumer-enforcement-no-action' }
+        Then { loaded_case.market_sector == 'healthcare-and-medical-equipment' }
+        Then { loaded_case.title         ==
+          'Acorn Mobility Services Ltd: unfair consumer contract terms and conditions'
+        }
+        Then { loaded_case.opened_date   == '2012-02-01' }
+        Then { loaded_case.closed_date   == '2012-02-01' }
+        Then { loaded_case.case_type     == 'consumer-enforcement' }
+
+        Then { loaded_case.modified_by_sheet == true}
+      end
+    end
+
+    context 'augmenting CC cases, which have a case_type' do
+      Given(:filename) { 'sheets/cc.csv' }
 
       When(:loaded_case) do
         case_store.find(
-          'http://www.oft.gov.uk/OFTwork/oft-current-cases/consumer-case-list-2012/acorn')
+          'http://www.competition-commission.org.uk'\
+          '/our-work/directory-of-all-inquiries/bbc-c4-itv-joint-venture'
+        )
       end
 
-      Then { loaded_case.outcome_type  == 'consumer-enforcement-no-action' }
-      Then { loaded_case.market_sector == 'healthcare-and-medical-equipment' }
-      Then { loaded_case.title         ==
-        'Acorn Mobility Services Ltd: unfair consumer contract terms and conditions'
-      }
-      Then { loaded_case.opened_date   == '2012-02-01' }
-      Then { loaded_case.closed_date   == '2012-02-01' }
-
-      Then { loaded_case.modified_by_sheet == true}
+      Then { loaded_case.case_type == 'mergers' }
     end
   end
 

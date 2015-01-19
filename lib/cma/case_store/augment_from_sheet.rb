@@ -40,6 +40,8 @@ module CMA
                   set(_case, row, field)
                 end
 
+                set(_case, row, :case_type) if _case.respond_to?(:case_type=)
+
                 _case.modified_by_sheet = true
                 case_store.save(_case)
               end
