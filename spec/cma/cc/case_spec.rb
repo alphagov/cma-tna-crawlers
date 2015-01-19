@@ -110,6 +110,13 @@ module CMA::CC
 
         example { expect(_case.case_type).to eql('markets') }
       end
+
+      describe '#case_type=' do
+        it 'can set the case type' do
+          _case.case_type = 'dinosaurs'
+          expect(_case.case_type).to eql('dinosaurs')
+        end
+      end
     end
 
     describe 'Adding more detail' do

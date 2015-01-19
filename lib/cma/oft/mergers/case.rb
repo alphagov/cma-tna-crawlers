@@ -13,8 +13,9 @@ module CMA
            co-op-psw|ambassador|co-operative1|phs-teacrate)
         }x
 
+        attr_writer :case_type
         def case_type
-          'mergers'
+          @case_type ||= 'mergers'
         end
 
         def old_style?

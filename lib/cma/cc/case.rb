@@ -11,13 +11,17 @@ module CMA
 
       attr_accessor :date_of_referral, :statutory_deadline
 
+      # Case type is overwritable for CC cases
+      attr_writer :case_type
       def case_type
-        case title
-        when /merger inquir(y|ies)/ then 'mergers'
-        when /market investigation/ then 'markets'
-        else
-          'unknown'
-        end
+        @case_type ||= case title
+                       when /merger inquir(y|ies)/ then
+                         'mergers'
+                       when /market investigation/ then
+                         'markets'
+                       else
+                         'unknown'
+                       end
       end
 
       def self.from_link(link)

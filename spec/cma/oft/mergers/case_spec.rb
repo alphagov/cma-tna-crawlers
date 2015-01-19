@@ -30,6 +30,18 @@ module CMA::OFT::Mergers
       end
     end
 
+    describe '#case_type' do
+      Given(:_case) { Case.create('http://example.com/merger', 'title') }
+
+      Then { _case.case_type == 'mergers' }
+
+      describe '#case_type=' do
+        When { _case.case_type = 'something-else' }
+
+        Then { _case.case_type == 'something-else' }
+      end
+    end
+
     describe '#add_summary' do
       Given(:_case) { Case.create(original_url, 'title') }
       Given(:doc)   { Nokogiri::HTML(File.read('spec/fixtures/oft/abn-amro.html'))}
