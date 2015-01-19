@@ -140,10 +140,22 @@ describe CMA::Sheet do
       describe 'rows with extra text in the Archive URL' do
         Given(:row) { sheet.rows[29] }
 
-        Then { row.title == 'Carlyle European Partners II / Britax Childcare Ltd ' }
+        Then { row.title == 'Carlyle European Partners II / Britax Childcare Ltd' }
         Then {
           row.link.original_url ==
             'http://www.oft.gov.uk/OFTwork/mergers/Mergers_Cases/2005/carlyle'
+        }
+      end
+
+      describe 'rows with extra space in title and Archive URL' do
+        Given(:row) { sheet.rows[424] }
+
+        Then do
+          row.title == 'BP Oil UK Ltd / Texaco Ltd'
+        end
+        Then {
+          row.link.original_url ==
+            'http://www.oft.gov.uk/OFTwork/mergers/Mergers_Cases/2003/bp-oil'
         }
       end
     end

@@ -55,6 +55,9 @@ module CMA
         'Criminal cartels - verdict' => 'criminal-cartels-verdict',
         'Regulatory appeals and references - final determination' =>
           'regulatory-references-and-appeals-final-determination',
+        'Mergers - phase 1 reference' => 'mergers-phase-1-referral',
+        'Mergers - phase 1  clearance' => 'mergers-phase-1-clearance',
+        'Mergers - Phase 1 FNTQ' => 'mergers-phase-1-found-not-to-qualify',
         '?' => 'UNKNOWN'
       }
 
@@ -64,7 +67,8 @@ module CMA
         'Mineral extraction, mining ang quarrying' => 'mineral-extraction-mining-and-quarrying',
         'Agriculture, environment and nattural resources' => 'agriculture-environment-and-natural-resources',
         'Agriculture' => 'agriculture-environment-and-natural-resources',
-        'Fire, police and security' => 'fire-police-and-security'
+        'Fire, police and security' => 'fire-police-and-security',
+        'Retail and wholsesale' => 'retail-and-wholesale'
       }
 
       CASE_TYPE_MAPPINGS = {
@@ -83,7 +87,7 @@ module CMA
 
       def title
         title = @row['Title'] || @row['Title ']
-        title.strip if title
+        title.strip.gsub("\u00A0", '') if title
       end
 
       def market_sector
@@ -122,6 +126,7 @@ module CMA
       def link
         url_str = @row['Archive URL']
         url_str.sub!('OFT closed case: ', '')
+        url_str.strip!
         @_link ||= CMA::Link.new(url_str)
       end
 
