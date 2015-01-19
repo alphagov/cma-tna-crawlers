@@ -35,7 +35,7 @@ module CMA
 
     def load(filename)
       class_to_load(filename).new.from_json File.read(
-      File.join(location, filename))
+        File.join(location, filename))
     end
 
     def file_exists?(filename)
