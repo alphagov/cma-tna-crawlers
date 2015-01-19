@@ -67,12 +67,23 @@ module CMA
         'Fire, police and security' => 'fire-police-and-security'
       }
 
+      CASE_TYPE_MAPPINGS = {
+        'Mergers' => 'mergers',
+        'Reviews of orders and undertakings' => 'review-of-orders-and-undertakings',
+        'Regulatory references and appeals' => 'regulatory-references-and-appeals'
+      }
+
       def initialize(row)
         @row = row
       end
 
+      def case_type
+        CASE_TYPE_MAPPINGS[@row['Case type']]
+      end
+
       def title
-        @row['Title'] || @row['Title ']
+        title = @row['Title'] || @row['Title ']
+        title.strip if title
       end
 
       def market_sector

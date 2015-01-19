@@ -99,6 +99,13 @@ describe CMA::Sheet do
         end
       end
     end
+
+    describe 'row with different case type' do
+      Given(:row) { sheet.rows[130] }
+
+      Then { row.title == 'Utilita Electricity Ltd v GEMA energy code modification appeal' }
+      Then { row.case_type == 'regulatory-references-and-appeals' }
+    end
   end
 
   context 'Mergers' do
@@ -113,6 +120,7 @@ describe CMA::Sheet do
         Then { expect(row).to be_a(CMA::Sheet::Row) }
 
         Then { row.market_sector == 'transport' }
+        Then { row.case_type     == 'mergers' }
         Then { row.opened_date   == nil }
         Then { row.closed_date   == Date.new(2007, 11, 28) }
         Then { row.outcome_type  == 'mergers-phase-1-found-not-to-qualify' }
@@ -208,6 +216,13 @@ describe CMA::Sheet do
             expect(row.opened_date).to satisfy {|date| date.nil? || date.is_a?(Date)}
           end
         end
+      end
+
+      describe 'the one non-mergers row!' do
+        Given(:row) { sheet.rows[41] }
+
+        Then { row.title == 'Centrica / Dynegy' }
+        Then { row.case_type == 'review-of-orders-and-undertakings' }
       end
     end
   end
