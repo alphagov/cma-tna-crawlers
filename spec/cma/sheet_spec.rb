@@ -109,6 +109,44 @@ describe CMA::Sheet do
   end
 
   context 'Mergers' do
+    context '03-05' do
+      Given(:filename) { 'sheets/mergers03-05/Mergers 03-05-Table 1.csv' }
+
+      Then { sheet.rows.size == 448 }
+
+      describe 'the first row' do
+        Given(:row) { sheet.rows[0] }
+
+        Then { expect(row).to be_a(CMA::Sheet::Row) }
+
+        Then { row.market_sector == 'recreation-and-leisure' }
+        Then { row.case_type     == nil }
+        Then { row.opened_date   == nil }
+        Then { row.closed_date   == Date.new(2006, 6, 7) }
+        Then { row.outcome_type  == 'mergers-phase-1-clearance-with-undertakings-in-lieu' }
+
+        Then  {
+          row.link.original_url ==
+            'http://www.oft.gov.uk/OFTwork/mergers/Mergers_Cases/2005/william-hill'
+        }
+
+        it 'parses all dates' do
+          sheet.rows.each do |row|
+            expect(row.opened_date).to satisfy {|date| date.nil? || date.is_a?(Date)}
+          end
+        end
+      end
+
+      describe 'rows with extra text in the Archive URL' do
+        Given(:row) { sheet.rows[29] }
+
+        Then { row.title == 'Carlyle European Partners II / Britax Childcare Ltd ' }
+        Then {
+          row.link.original_url ==
+            'http://www.oft.gov.uk/OFTwork/mergers/Mergers_Cases/2005/carlyle'
+        }
+      end
+    end
     context '06-07' do
       Given(:filename) { 'sheets/mergers06-08/Mergers 06-07-Table 1.csv' }
 

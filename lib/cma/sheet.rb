@@ -120,7 +120,9 @@ module CMA
       end
 
       def link
-        @_link ||= CMA::Link.new(@row['Archive URL'])
+        url_str = @row['Archive URL']
+        url_str.sub!('OFT closed case: ', '')
+        @_link ||= CMA::Link.new(url_str)
       end
 
       def self.parse_date(date_str)
