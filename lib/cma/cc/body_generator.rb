@@ -78,7 +78,7 @@ module CMA
 
 
       def reformat_date(value)
-        Date.strptime(value, '%Y-%m-%d').strftime('%d/%m/%Y')
+        Date.strptime(value, '%Y-%m-%d').strftime('%d/%m/%Y') rescue 'N/A'
       end
 
       def append_oft_sections
@@ -90,7 +90,27 @@ module CMA
         if bodies.any?
           _case.body << "\n## Phase 1\n"
 
-          append_bodies(_case, bodies, header_offset: 2)
+          append_bodies(bodies, header_offset: 2)
+        end
+      end
+
+      def self.case_store
+        @@case_store ||= CMA::CaseStore.new
+      end
+
+      def self.case_filenames
+        Dir[File.join(case_store.location, 'our-work*.json')].map do |f|
+          File.basename(f)
+        end
+      end
+
+      def self.generate!
+        case_filenames.each do |filename|
+          _case = case_store.load(filename)
+
+          puts "Generating body for #{filename}"
+          BodyGenerator.new(_case).generate!
+          case_store.save(_case)
         end
       end
     end
