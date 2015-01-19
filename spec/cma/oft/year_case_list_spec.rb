@@ -118,6 +118,25 @@ module CMA::OFT
             Then { _case.original_url == 'http://www.oft.gov.uk/OFTwork/mergers/decisions/2010/2-sisters' }
           end
         end
+
+        context 'market references' do
+          Given(:filename) { 'market-references.html' }
+
+          Then { list.cases.size == 14 }
+
+          describe 'the first case' do
+            When(:_case) { list.cases.first }
+
+            Then { _case.title        == 'Aggregates' }
+            Then { _case.original_url == 'http://www.oft.gov.uk/OFTwork/markets-work/references/aggregates-MIR' }
+          end
+          describe 'the last case' do
+            When(:_case) { list.cases.last }
+
+            Then { _case.title        == 'The supply of liquefied petroleum gas' }
+            Then { _case.original_url == 'http://www.oft.gov.uk/OFTwork/markets-work/references/liquefied-petroleum' }
+          end
+        end
       end
     end
   end
