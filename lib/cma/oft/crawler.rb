@@ -13,6 +13,9 @@ module CMA
       OFT_BASE      = 'http://www.oft.gov.uk/'
       CURRENT_CASES_ROOT = File.join(TNA_BASE, OFT_BASE, '/OFTwork/oft-current-cases/')
 
+      ASSET = %r{(?<!Brie1)\.pdf$} # Delicious Brie1 actually a briefing note
+
+
       def canonicalize_uri(href)
         URI(href)
       end
