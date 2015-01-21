@@ -8,7 +8,7 @@ describe CMA::CC::BodyGenerator do
     let(:location)      { 'spec/fixtures/cc' }
     let(:case_store)    { CMA::CaseStore.new(location) }
     let(:case_filename) { 'our-work-directory-of-all-inquiries-aeg-wembley-arena.json' }
-    let(:_case)         { case_store.find('http://example.com/our-work/directory-of-all-inquiries/aeg-wembley-arena') }
+    let(:_case)         { case_store.load(case_filename) }
 
     subject(:body_generator) { CMA::CC::BodyGenerator.new(_case) }
 
