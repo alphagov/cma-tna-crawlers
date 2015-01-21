@@ -60,5 +60,9 @@ module CMA
     def case_state
       'closed'
     end
+
+    def to_s
+      "#{title} #{original_url}"
+    end
   end
 end
