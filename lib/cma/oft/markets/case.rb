@@ -19,7 +19,7 @@ module CMA
         def add_subpage(doc)
           original_url = original_url_from_meta(doc)
 
-          markup_sections[section_name(original_url)] = subpage_content_for(doc)
+          markup_sections[section_name(original_url)] = sanitised_body_content(doc)
 
           original_urls << www(original_url)
         end

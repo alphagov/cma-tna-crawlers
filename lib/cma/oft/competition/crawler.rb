@@ -16,15 +16,16 @@ module CMA
           %r{
             /OFTwork/
             (?:
-              (?:competition-act-and-cartels(?:/ca98(-current)?(?:/closure)?)?)|
+              (?:competition-act-and-cartels(?:/ca98(-current)?(?:/closure)?)?)
             )
+            # Don't match any of the lists
             (?!/decisions/?$)
             (?!/closure/?$)
             (?!/ca98/?$)
-            /[a-z|A-Z|0-9|_|-]+/?$
-          }x
 
-        ASSET              = %r{(?<!Brie1)\.pdf$} # Delicious Brie1 actually a briefing note
+            # But /decisions/<case> is ok
+            (?:/decisions)?/[a-z|A-Z|0-9|_|-]+/?$
+          }x
 
         FOLLOW_ONLY = [
          CASE_DETAIL,
@@ -48,12 +49,17 @@ module CMA
 
           case original_url
           when CA98_CLOSURE, CA98_COMPLETED, CARTELS_COMPLETED
+            puts ' Case List'
             CMA::OFT::YearCaseList.new(page.doc).save_to(
               case_store, noclobber: true)
           when CASE_DETAIL
             puts ' Case Detail'
-            with_case(original_url, original_url) do |_case|
-              _case.add_detail(page.doc)
+            begin
+              with_case(original_url, original_url) do |_case|
+                _case.body = _case.sanitised_body_content(page.doc)
+              end
+            rescue Errno::ENOENT
+              puts "WARN: no case found for #{original_url}"
             end
           when ASSET
             puts ' ASSET'

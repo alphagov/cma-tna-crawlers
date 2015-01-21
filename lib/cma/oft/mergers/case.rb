@@ -45,7 +45,7 @@ module CMA
             main_header_text(doc)
 
           subpage_name = subpage_name_for(doc)
-          markup_sections[subpage_name] = subpage_content_for(doc)
+          markup_sections[subpage_name] = sanitised_body_content(doc)
 
           original_urls << www(original_url_from_meta(doc))
         end

@@ -43,7 +43,7 @@ module CMA
           </xsl:stylesheet>
       XML
 
-      def subpage_content_for(doc)
+      def sanitised_body_content(doc)
         doc       = doc.dup
         body_copy = doc.at_css('.body-copy')
 
