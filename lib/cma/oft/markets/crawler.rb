@@ -13,6 +13,7 @@ module CMA
         FOLLOW_ONLY = [
           Case::LIST,
           Case::CORE,
+          Case::DETAIL,
           Case::EXTRA_DETAIL,
           ASSET
         ]
@@ -38,9 +39,14 @@ module CMA
               _case.add_subpage(page.doc)
             end
           when Case::DETAIL, Case::EXTRA_DETAIL
-            puts ' Detail'
-            with_nearest_case_matching(page.referer, Case::CORE) do |_case|
-              _case.add_subpage(page.doc)
+            print ' Detail'
+            begin
+              with_nearest_case_matching(page.referer, Case::CORE) do |_case|
+                puts " as #{_case.section_name(original_url)}"
+                _case.add_subpage(page.doc)
+              end
+            rescue
+              puts
             end
           when ASSET
             puts ' ASSET'

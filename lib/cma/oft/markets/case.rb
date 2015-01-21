@@ -28,7 +28,8 @@ module CMA
           case original_url
           when CORE         then 'core-documents'
           when DETAIL       then 'detail'
-          when EXTRA_DETAIL then 'extra-detail'
+          when EXTRA_DETAIL
+            markup_sections['extra-detail'] ? 'extra-detail2' : 'extra-detail'
           end
         end
       end

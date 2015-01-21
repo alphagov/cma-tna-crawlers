@@ -8,28 +8,25 @@ module CMA::OFT::Markets
 
     describe '#section_name' do
       context 'a core page' do
-        Given(:url) {
-          'http://webarchive.nationalarchives.gov.uk/20140402141250/'\
-          'http://www.oft.gov.uk/OFTwork/markets-work/references/airports'
-        }
-
+        Given(:url) { 'http://www.oft.gov.uk/OFTwork/markets-work/references/airports' }
         Then { _case.section_name(url) == 'core-documents' }
       end
-      context 'a detail page' do
-        Given(:url) {
-          'http://webarchive.nationalarchives.gov.uk/20140402141250/'\
-          'http://www.oft.gov.uk/OFTwork/markets-work/airports'
-        }
 
+      context 'a detail page' do
+        Given(:url) { 'http://www.oft.gov.uk/OFTwork/markets-work/airports' }
         Then { _case.section_name(url) == 'detail' }
       end
-      context 'an extra detail page' do
-        Given(:url) {
-          'http://webarchive.nationalarchives.gov.uk/20140402141250/'\
-          'http://www.oft.gov.uk/OFTwork/markets-work/references/classified-terms'
-        }
 
+      context 'an extra detail page' do
+        Given(:url) { 'http://www.oft.gov.uk/OFTwork/markets-work/references/classified-terms'}
         Then { _case.section_name(url) == 'extra-detail' }
+      end
+
+      context 'a same-named section exists' do
+        Given(:url) { 'http://www.oft.gov.uk/OFTwork/markets-work/references/varied'}
+        Given       { _case.markup_sections['extra-detail'] = 'exists' }
+
+        Then { _case.section_name(url) == 'extra-detail2' }
       end
     end
 
