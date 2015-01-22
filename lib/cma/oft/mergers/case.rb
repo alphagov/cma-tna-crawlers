@@ -30,6 +30,18 @@ module CMA
           new_style?
         end
 
+        ##
+        # Does this Found Not To Qualify need a body right now according
+        # to what's in the given page doc?
+        def needs_fntq_body?(doc)
+          body_copy = doc.at_css('.body-copy').content
+          (
+            body_copy =~ /does not qualify/ &&
+            body_copy !~ /full text of the decision/
+          ) ||
+          body_copy =~ /Costain.*May Gurney.*abandoned/
+        end
+
         CLOSED_CASE_PREFIX = 'OFT closed case: '
 
         def add_summary(doc)

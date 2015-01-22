@@ -69,6 +69,30 @@ module CMA::OFT::Mergers
       end
     end
 
+    describe '#needs_fntq_body?' do
+      context 'with a new-style case that is Found Not To Qualify' do
+        let(:_case) { Case.create('http://example.com', 'title') }
+
+        subject { _case.needs_fntq_body?(doc) }
+
+        context 'when it has the full text of the decision as a download' do
+          let(:doc) { Nokogiri::HTML(File.read('spec/fixtures/oft/sports-direct-fntq-with-pdf.html')) }
+          it { should be_falsey }
+        end
+
+        context 'when it has the full text of the decision in the HTML' do
+          let(:doc) { Nokogiri::HTML(File.read('spec/fixtures/oft/accraply-fntq-no-pdf.html')) }
+          it { should be_truthy }
+        end
+
+        context 'when it has text in the PDF and has been abandoned' do
+          let(:doc) { Nokogiri::HTML(File.read('spec/fixtures/oft/costain-abandoned.html')) }
+          it { should be_truthy }
+        end
+      end
+
+    end
+
     describe '#add_subpage' do
       Given(:_case) { Case.create('http://example.com/1', 'title') }
 

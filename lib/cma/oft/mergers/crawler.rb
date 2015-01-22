@@ -60,11 +60,14 @@ module CMA
           case original_url
           when CASE_LIST
             puts ' Case list'
-            CMA::OFT::YearCaseList.new(page.doc).save_to(case_store)
+            CMA::OFT::YearCaseList.new(page.doc).save_to(case_store, noclobber: true)
           when CASE
             puts ' Case'
             with_case(original_url) do |_case|
-              _case.add_summary(page.doc) if _case.new_style?
+              if _case.new_style?
+                _case.add_summary(page.doc)
+                _case.body = _case.sanitised_body_content(page.doc) if _case.needs_fntq_body?(page.doc)
+              end
             end
           when SUBPAGE
             if decision_from_2009_case?(original_url, page)
@@ -114,13 +117,6 @@ module CMA
 
         def merger_entry_points
           %w(
-            OFTwork/mergers/Mergers_Cases/2009/?Order=Date&currentLetter=A
-            OFTwork/mergers/Mergers_Cases/2008/?Order=Date&currentLetter=A
-            OFTwork/mergers/Mergers_Cases/2007/?Order=Date&currentLetter=A
-            OFTwork/mergers/Mergers_Cases/2006/?Order=Date&currentLetter=A
-            OFTwork/mergers/Mergers_Cases/2005/?Order=Date&currentLetter=A
-            OFTwork/mergers/Mergers_Cases/2004/?Order=Date&currentLetter=A
-            OFTwork/mergers/Mergers_Cases/2003/?Order=Date&currentLetter=A
             OFTwork/mergers/decisions/2014/
             OFTwork/mergers/decisions/2012/
             OFTwork/mergers/decisions/2013/
