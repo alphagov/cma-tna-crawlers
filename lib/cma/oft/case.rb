@@ -10,8 +10,9 @@ module CMA
         'unknown'
       end
 
-      def to_kramdown(content)
-        Kramdown::Document.new(content, input: 'html').to_kramdown.gsub(/\{:.+?}/m, '')
+      def to_kramdown(content, options = {})
+        options[:input] = 'html'
+        Kramdown::Document.new(content, options).to_kramdown.gsub(/\{:.+?}/m, '')
       end
 
       # <meta name="DC.identifier" scheme="DCTERMS.URI"
@@ -43,7 +44,7 @@ module CMA
           </xsl:stylesheet>
       XML
 
-      def sanitised_body_content(doc)
+      def sanitised_body_content(doc, options = {})
         doc       = doc.dup
         body_copy = doc.at_css('.body-copy')
 
@@ -65,7 +66,7 @@ module CMA
         xslt = Nokogiri::XSLT(REMOVE_NODES)
         new_body_copy = xslt.transform(doc).at_css('.body-copy')
 
-        to_kramdown(new_body_copy.inner_html.to_s)
+        to_kramdown(new_body_copy.inner_html.to_s, options)
       end
 
       def self.create(original_url, title)

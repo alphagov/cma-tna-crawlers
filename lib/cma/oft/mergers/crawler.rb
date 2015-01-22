@@ -66,7 +66,9 @@ module CMA
             with_case(original_url) do |_case|
               if _case.new_style?
                 _case.add_summary(page.doc)
-                _case.body = _case.sanitised_body_content(page.doc) if _case.needs_fntq_body?(page.doc)
+                if _case.needs_fntq_body?(page.doc)
+                  _case.body = _case.sanitised_body_content(page.doc, header_offset: 1)
+                end
               end
             end
           when SUBPAGE
@@ -117,6 +119,13 @@ module CMA
 
         def merger_entry_points
           %w(
+            OFTwork/mergers/Mergers_Cases/2009/?Order=Date&currentLetter=A
+            OFTwork/mergers/Mergers_Cases/2008/?Order=Date&currentLetter=A
+            OFTwork/mergers/Mergers_Cases/2007/?Order=Date&currentLetter=A
+            OFTwork/mergers/Mergers_Cases/2006/?Order=Date&currentLetter=A
+            OFTwork/mergers/Mergers_Cases/2005/?Order=Date&currentLetter=A
+            OFTwork/mergers/Mergers_Cases/2004/?Order=Date&currentLetter=A
+            OFTwork/mergers/Mergers_Cases/2003/?Order=Date&currentLetter=A
             OFTwork/mergers/decisions/2014/
             OFTwork/mergers/decisions/2012/
             OFTwork/mergers/decisions/2013/

@@ -56,7 +56,7 @@ module CMA
             puts ' Case Detail'
             begin
               with_case(original_url, original_url) do |_case|
-                _case.body = _case.sanitised_body_content(page.doc)
+                _case.body = _case.sanitised_body_content(page.doc, header_offset: 1)
               end
             rescue Errno::ENOENT
               puts "WARN: no case found for #{original_url}"
