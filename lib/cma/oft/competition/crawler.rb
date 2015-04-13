@@ -39,6 +39,16 @@ module CMA
           TNA_BASE + 'http://stg-new-oft:8080/OFTwork/competition-act-and-cartels/ca98-current/commercial-vehicle-criminal/'
         ]
 
+        def link_nodes_for(page)
+          # There's an additional sidebar we need to extract PDF links from, only
+          # if the page we're parsing is a CASE_DETAIL page
+          if page.url.to_s =~ CMA::OFT::Competition::Crawler::CASE_DETAIL
+            page.doc.css('.body-copy a, #ID5 a.pdf-doc')
+          else
+            page.doc.css('.body-copy a')
+          end
+        end
+
         def should_follow?(href)
           FOLLOW_ONLY.any? { |pattern| pattern =~ href } &&
             IGNORE_EXPLICITLY.none? { |pattern| pattern == href }
