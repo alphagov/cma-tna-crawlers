@@ -68,6 +68,14 @@ module CMA
 
         find_nearest_page_matching(page.referer, regex)
       end
+
+      def link_nodes_for(page)
+        raise NotImplementedError
+      end
+
+      def hrefs_for(page)
+        link_nodes_for(page).map { |a| a["href"] }.compact
+      end
     end
   end
 end
