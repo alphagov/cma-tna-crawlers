@@ -76,6 +76,12 @@ module CMA
       def hrefs_for(page)
         link_nodes_for(page).map { |a| a["href"] }.compact
       end
+
+      # Unfortunately #should_follow? seems to choke on links that would
+      # otherwise match the regexp but happen to end in ';jsessionid=XX...'
+      def clean_hrefs_for(page)
+        hrefs_for(page).map { |href| href.split(/;/).first }
+      end
     end
   end
 end

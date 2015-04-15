@@ -28,7 +28,7 @@ module CMA
         crawl.focus_crawl do |page|
           next [] if page.doc.nil?
 
-          hrefs_for(page).map do |href|
+          clean_hrefs_for(page).map do |href|
             if should_follow?(href)
               begin
                 canonicalize_uri(href)
