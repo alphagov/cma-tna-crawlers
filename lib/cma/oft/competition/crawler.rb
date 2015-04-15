@@ -74,10 +74,15 @@ module CMA
           when ASSET
             puts ' ASSET'
             return if page.referer.to_s =~ /doorstep-selling/
-            with_nearest_case_matching(page.referer, CASE_DETAIL) do |_case|
-              asset = CMA::Asset.new(original_url, _case, page.body, page.headers['content-type'].first)
-              asset.save!(case_store.location)
-              _case.assets << asset
+
+            begin
+              with_nearest_case_matching(page.referer, CASE_DETAIL) do |_case|
+                asset = CMA::Asset.new(original_url, _case, page.body, page.headers['content-type'].first)
+                asset.save!(case_store.location)
+                _case.assets << asset
+              end
+            rescue Errno::ENOENT
+              puts "WARN: no case found for #{CMA::Link.new(page.referer).original_url} while trying to add asset #{original_url}"
             end
           end
         end
