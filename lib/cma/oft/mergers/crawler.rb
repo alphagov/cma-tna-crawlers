@@ -63,13 +63,19 @@ module CMA
             CMA::OFT::YearCaseList.new(page.doc).save_to(case_store, noclobber: true)
           when CASE
             puts ' Case'
-            with_case(original_url) do |_case|
-              if _case.new_style?
-                _case.add_summary(page.doc)
-                if _case.needs_fntq_body?(page.doc)
-                  _case.body = _case.sanitised_body_content(page.doc, header_offset: 1)
+            begin
+              with_case(original_url) do |_case|
+                if _case.new_style?
+                  _case.add_summary(page.doc)
+                  if _case.needs_fntq_body?(page.doc)
+                    _case.body = _case.sanitised_body_content(page.doc, header_offset: 1)
+                  end
                 end
               end
+            rescue Errno::ENOENT
+              puts "\nWARNING: no case found for CASE #{original_url}\n"
+              dump_referer_chain(page, 1)
+              puts
             end
           when SUBPAGE
             if decision_from_2009_case?(original_url, page)
