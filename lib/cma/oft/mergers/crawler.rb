@@ -163,7 +163,13 @@ module CMA
         end
 
         def link_nodes_for(page)
-          page.doc.css('.body-copy a')
+          # There's an additional sidebar we need to extract PDF links from, only
+          # if the page we're parsing is a SUBPAGE
+          if page.url.to_s =~ CMA::OFT::Mergers::Crawler::SUBPAGE
+            page.doc.css('.body-copy a, #ID5 a.pdf-doc')
+          else
+            page.doc.css('.body-copy a')
+          end
         end
       end
     end
